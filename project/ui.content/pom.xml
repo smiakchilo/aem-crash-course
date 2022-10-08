@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.exadel.aem</groupId>
+        <artifactId>sample-project</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>sample-project.ui.content</artifactId>
+    <packaging>content-package</packaging>
+    <name>Sample AEM Project - UI Content</name>
+    <description>UI content package for Sample AEM Project</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.jackrabbit</groupId>
+                <artifactId>filevault-package-maven-plugin</artifactId>
+                <configuration>
+                    <group>com.exadel.aem</group>
+                    <name>sample-project.ui.content</name>
+                    <packageType>content</packageType>
+                    <accessControlHandling>merge</accessControlHandling>
+                    <validatorsSettings>
+                        <!-- disable nodetype validation as workaround until JCRVLT-463 got fixed -->
+                        <jackrabbit-nodetypes>
+                            <isDisabled>true</isDisabled>
+                        </jackrabbit-nodetypes>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/conf,/content,/content/experience-fragments,/content/dam</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                    </validatorsSettings>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.exadel.aem</groupId>
+                            <artifactId>sample-project.ui.apps</artifactId>
+                            <version>${project.version}</version>
+                        </dependency>
+                    </dependencies>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>com.day.jcr.vault</groupId>
+                <artifactId>content-package-maven-plugin</artifactId>
+                <extensions>true</extensions>
+                <configuration>
+                    <verbose>true</verbose>
+                    <failOnError>true</failOnError>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.exadel.aem</groupId>
+            <artifactId>sample-project.core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.exadel.aem</groupId>
+            <artifactId>sample-project.ui.apps</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.aem</groupId>
+            <artifactId>uber-jar</artifactId>
+            <version>6.5.12</version>
+        </dependency>
+    </dependencies>
+</project>
