@@ -113,7 +113,7 @@ flowchart TD
     end
     subgraph s2[" "]
         direction LR
-        C["Original"<br>Request]-->D1[SlingHttpServletRequest]
+        C["Original"<br>request]-->D1[SlingHttpServletRequest]
         C-->D2[SlingHttpServletResponse]
         D1-->|...Filters|E[Default Get Servlet]
         D2-->|...Filters|E
@@ -121,8 +121,8 @@ flowchart TD
     subgraph s3[" "]
         direction LR
         F[Default Get Servlet...]-->G(..considers node /content/home,<br>wraps in Resource)
-        G-->|Request+resource<br>Response|H(...finds appropriate<br>Page component)
-        H-->|Request+resource<br>Response|I[Page component<br>renders /content/home]
+        G-->|Request+Resource<br>Response|H(...finds appropriate<br>Page component)
+        H-->|Request+Resource<br>Response|I[Page component<br>renders /content/home]
     end
     s1-->s2-->s3
 ```
@@ -134,13 +134,13 @@ Of all the facilities that the `Resource` provides, the most notable is `ValueMa
 Such component as that was given the floor when processing _/content/home.html_ is a page component. It matches a page resource. A page resource has child resources. Each of them is processed by a component of its own. So the page component in turn asks its child components to render a part of the page. Each of these child components is given the reference to `SlingHttpServletRequest` and `SlingHttpServletResponse`. Each request also encapsulates a resource. This time it will be not the page resource but a child resource inside the page.
 ```mermaid
 flowchart TD
-    A["/content/home<br>(page resource)"]
+    A["/content/home<br>(Page resource)"]
     A-->Ac(Page component)-->Am((Page<br>model))
     subgraph C[" "]
     direction LR
-        c1["child1<br>(child resource)"]-->c1c(Child component)-->c1m((Model))
-        c2["child2<br>(child resource)"]-->c2c(Child component)-->c2m((Model))
-        cN["childN<br>(child resource)"]-->cNc(Child component)-->cNm((Model))
+        c1["/content/home/jcr:content/child1<br>(Child resource)"]-->c1c(Child component)-->c1m((Model))
+        c2["/content/home/jcr:content/child2<br>(Child resource)"]-->c2c(Child component)-->c2m((Model))
+        cN["/content/home/jcr:content/childN<br>(Child resource)"]-->cNc(Child component)-->cNm((Model))
     end
     A-->C
 ```
@@ -155,7 +155,7 @@ flowchart TD
         G-->|Request+Page resource,<br>Response|G1((Page<br>model))
         G-->H[Child component 1]-->|Request+Child resource,<br>Response|H1((Child<br>component<br>model 1))
         G-->I[Child component 2]-->|Request+Child Resource,<br>Response|I1((Child<br>component<br>model 2))
-        G-->J[Child component 3]-->|Request+Child resource,<br>Response|J1((Child<br>component<br>model 3))
+        G-->J[Child component N]-->|Request+Child resource,<br>Response|J1((Child<br>component<br>model N))
     end
     subgraph s2[" "]
         direction LR
@@ -163,7 +163,7 @@ flowchart TD
         K((Page<br>model))-->|Response|P
         L((Child<br>component<br>model 1))-->L1[Child<br>component 1]-->|Response|P
         M((Child<br>component<br>model 2))-->M1[Child<br>component 2]-->|Response|P
-        N((Child<br>component<br>model 3))-->N1[Child<br>component 3]-->|Response|P
+        N((Child<br>component<br>model N))-->N1[Child<br>component N]-->|Response|P
         P-->|Response|Q[To servlet<br>To browser]
     end
     s1-->s2
