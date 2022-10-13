@@ -93,7 +93,7 @@ The usual adaptables for a model are `SlingHttpServletRequest` and `Resource`. W
 Below is a look at this process.
 
 <details>
-<summary><b>How a Sling model fits in the HTTP request/response flow? (expand to see)</b></summary>
+<summary><em style="color:#aaa; font-weight: bold">How a Sling model fits in the HTTP request/response flow? (expand to see)</em></summary>
 
 A Sling model is usually a part of an AEM component. A component lives in a page and displays a part of the page’s data. It is initialized when a user requests a page, alongside with other components that are bound to other parts of the same page’s data.
 
@@ -280,7 +280,7 @@ public class MyModel {
 Apart from this, by overriding a name we can traverse across the resource tree to dig specific properties out of there. E.g., `@ValueMapValue(name = "child1/granchild1/title")` will descend two resources down from the current one, and will try to find the value of the `title` property there.
 
 <details>
-<summary><b>What are the data types to be injected (expand to see)</b></summary>
+<summary><em style="color:#aaa; font-weight: bold">What are the data types to be injected (expand to see)</em></summary>
 
 Generally speaking, types of class members used for injection must match types of data stored in JCR. In real life we usually deal with boolean, int, long, double, String and arrays of those types. Dates are presented by Calendar or Date.
 

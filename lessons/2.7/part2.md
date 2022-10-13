@@ -1,6 +1,6 @@
 ## Data manipulations in AEM Components
 
-### How Components are, is defined by the data architecture
+### How Components are designed, is defined by the data architecture
 
 We have many times mentioned that AEM components closely interact with Java Content Repository (JCR). So do AEM services. They read JCR nodes: either one by one, or as node trees. Besides, they create, modify and delete nodes.
 
@@ -11,7 +11,7 @@ There’s not a "true" object-relational mapping library in AEM. No likes of Liq
 
 To understand this API, let us review how the content repository is organized.
 <details>
-<summary><b>Content repository: an overview (expand to see)</b></summary>
+<summary><em style="color:#aaa; font-weight: bold">Content repository: an overview (expand to see)</em></summary>
 
 The content repository can be presented within three tiers.
 
@@ -40,14 +40,15 @@ Speaking of resources, there are some particular species that are required quite
 
 For example, when a user sends a request to AEM with a path like _/content/home.html_, they effectively request for a resource identified by this path. This is not "any" resource; this is exactly a _page resource_. The notion of Page was not present in Sling. It was added by AEM itself. 
 
-Similarly, when a server checks access rights for a user, it looks for the user data in JCR and finds some resource, again. That would be a _user resource_. Also there are _workflow resources_, _job resources_, _query resources_ etc. They all manifest the third level – **Functional tier**. On this level there are resources and utility classes tailored for some particular (and relatively narrow) business tasks.
+Similarly, when a server checks access rights for a user, it looks for the user data in JCR and finds some resource, again. That would be a _user resource_. Also there are _workflow resources_, _job resources_, _query resources_ etc. They all manifest the third level – **Application tier**. On this level there are resources and utility classes tailored for some particular (and relatively narrow) business tasks.
+![Tiers diagram](img.png)
 </details>
 
 ### Adaptation, again
 When we speak of a Node, a Resource, or Page, they may sound as similar entities. Actually they belong to three different data tiers: 
 * the JCR tier;
 * the Sling Resource tier;
-* and the AEM's own functional tier.
+* and the AEM's own application tier.
 
 Tiers are "included" in each other like a Russian doll. That is, whenever we see a programming entity like Page, we understand that the Page is also a Resource, and the Resource is also a Node. Therefore, we can switch from one abstraction to another when we need it.
 
@@ -65,7 +66,7 @@ In pure Java world we would do this like `AbstractFoo abstractFoo = (AbstractFoo
 Apache Sling makes use of the _adapter pattern_ to bypass this limitation. Many and more entities can be "cast" to each other via calls of the `adaptTo(Class<?> targetClass)` method. They can but must not belong to the same inheritance tree, and there are no "narrowing/widening" relations. All are considered "equal in rights". You can write a custom adaptation or an adapter of your own. If an adapter can’t be found, there is not an exception but just a `null`.
 
 <details>
-<summary><b>Standard adaptations (click to expand)</b></summary>
+<summary><em style="color:#aaa; font-weight: bold">Standard adaptations (click to expand)</em></summary>
 
 Right out of the box you can adapt a _Resource_ to a _Node_, or to a _ValueMap_, or to a _Page_, or else to an _InputStream_ to read the binary file data from the resource. Also you can adapt a _Page_ to a _Resource_ or a _Node_. You are able to retrieve a user session object from a _PageManager_ via adaptation; get a _QueryBuilder_, and so much more.
 
