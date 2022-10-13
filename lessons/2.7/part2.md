@@ -15,7 +15,7 @@ To understand this API, let us review how the content repository is organized.
 
 The content repository can be presented within three tiers.
 
-The lowest is the **JCR tier**. Basic entities here are _Node_ and _Property_. They belong to the `javax.jcr` package (you see, it’s not even AEM or Sling – this is a part of Java extended core).
+The lowest is the **JCR tier**. The basic entities here are _Node_ and _Property_. They belong to the `javax.jcr` package (you see, it’s not even AEM or Sling – this is a part of Java extended core).
 
 You probably already know it but it won’t hurt to repeat: any "unit" of data storage or, in other words, every "record" in JCR is a Node. 
 
@@ -23,7 +23,7 @@ A _Node_ consists of _Properties_ and nothing else. Even if we decided to upload
 
 Every property has a _type_. There are just 12 property types. You can peek at them [here](https://developer.adobe.com/experience-manager/reference-materials/spec/jsr170/javadocs/jcr-2.0/javax/jcr/PropertyType.html). 
 
-The type for integer numbers is `long`. It means that whatever non-floating point number you put in JCR it casts to `long`. <small>Rather, there's also the `Decimal` time for extra large numbers, but it is rare to appear.</small> The only floating-point type is `double`. There are `boolean`-s, `String`-s and dates. Large data chunks, such as file contents, are stored in `binary` type. The rest of formats are kind of "infrastructural" and are rarely used by developers.
+The type for integer numbers is `long`. It means that whatever non-floating point number you put in JCR it casts to `long`. <small>Rather, there's also the `Decimal` time for extra large numbers, but it is rare to appear.</small> The only floating-point type is `double`. There are `boolean`-s, `String`-s and dates. Large data chunks, such as file contents, are stored in `binary` type. The rest of the formats are kind of "infrastructural" and are rarely used by developers.
 
 > ![img.png](img/data-types.png)
 > <br>_Different JCR properties and their types as seen in CRX/DE_
@@ -32,15 +32,15 @@ Of all the node’s properties, the main one is `jcr:primaryType`. It defines "s
 
 The JCR tier is comprehensive. Technically, we would need nothing more. But they say the API is not quite convenient, and there’s a lot of boilerplate operations. That is why Sling came up with its Sling Resource notion, and thus installed the second level of abstraction – the **Resource tier**.
 
-_Resource_ is a decorator over a JCR node with convenient accessors. It contains a _ValueMap_ allowing to read and sometimes write a property of a JCR node as easily as we read an entry of a Java map.
+_Resource_ is a decorator over a JCR node with convenient accessors. It contains a _ValueMap_ allowing us to read and sometimes write a property of a JCR node as easily as we read an entry of a Java map.
 
-Above all, _Resource_ does not only "speak for" a real-world node – it is a high-level abstraction. You can create an on-the-fly _Resource_ in memory without need to store it anywhere. You can declare a descendant class from _Resource_ with new functionality; can serialize and deserialize a _Resource_. It is right to say that the Resource is designed to be a universal data unit, a "global currency" of the AEM world.
+Above all, _Resource_ does not only "speak for" a real-world node – it is a high-level abstraction. You can create an on-the-fly _Resource_ in memory without the need to store it anywhere. You can declare a descendant class from _Resource_ with some new functionality; can serialize and deserialize a _Resource_. It is right to say that the Resource is designed to be a universal data unit, a "global currency" of the AEM world.
 
 Speaking of resources, there are some particular species that are required quite often. 
 
-For example, when a user sends a request to AEM with a path like _/content/home.html_, they effectively request for a resource identified by this path. This is not "any" resource; this is exactly a _page resource_. The notion of Page was not present in Sling. It was added by AEM itself. 
+For example, when a user sends a request to AEM with a path like _/content/home.html_, they effectively request a resource identified by this path. This is not "any" resource; this is exactly a _page resource_. The notion of Page was not present in Sling. It was added by AEM itself. 
 
-Similarly, when a server checks access rights for a user, it looks for the user data in JCR and finds some resource, again. That would be a _user resource_. Also there are _workflow resources_, _job resources_, _query resources_ etc. They all manifest the third level – **Application tier**. On this level there are resources and utility classes tailored for some particular (and relatively narrow) business tasks.
+Similarly, when a server checks access rights for a user, it looks for the user data in JCR and finds a resource. That would be a _user resource_. Also, there are _workflow resources_, _job resources_, _query resources_ etc. They all manifest the third level – **Application tier**. On this level, there are resources and utility classes tailored for some particular (and relatively narrow) business tasks.
 ![Tiers diagram](img.png)
 </details>
 
@@ -63,12 +63,12 @@ flowchart TD
 
 In pure Java world we would do this like `AbstractFoo abstractFoo = (AbstractFoo) foo` (Widening type cast). Or just vice versa: `Foo foo = (Foo) abstractFoo` (Narrowing type cast. Beware: deemed a bad practice, and is exception prone!). One great limitation here is that `Foo` must be an extension, or else an implementation of `AbstractFoo`.
 
-Apache Sling makes use of the _adapter pattern_ to bypass this limitation. Many and more entities can be "cast" to each other via calls of the `adaptTo(Class<?> targetClass)` method. They can but must not belong to the same inheritance tree, and there are no "narrowing/widening" relations. All are considered "equal in rights". You can write a custom adaptation or an adapter of your own. If an adapter can’t be found, there is not an exception but just a `null`.
+Apache Sling makes use of the _adapter pattern_ to bypass this limitation. Many and more entities can be "cast" to each other via calls of the `adaptTo(Class<?> targetClass)` method. They can but must not belong to the same inheritance tree, and there are no "narrowing/widening" relations. All are considered "equal in rights". You can write a custom adaptation or an adapter of your own. If an adapter can’t be found, there isn't exception but just `null`.
 
 <details>
 <summary><em style="color:#aaa; font-weight: bold">Standard adaptations (click to expand)</em></summary>
 
-Right out of the box you can adapt a _Resource_ to a _Node_, or to a _ValueMap_, or to a _Page_, or else to an _InputStream_ to read the binary file data from the resource. Also you can adapt a _Page_ to a _Resource_ or a _Node_. You are able to retrieve a user session object from a _PageManager_ via adaptation; get a _QueryBuilder_, and so much more.
+Right out of the box you can adapt a _Resource_ to a _Node_, or to a _ValueMap_, or to a _Page_, or else to an _InputStream_ to read the binary file data from the resource. Also, you can adapt a _Page_ to a _Resource_ or a _Node_. You are able to retrieve a user session object from a _PageManager_ via adaptation; get a _QueryBuilder_, and so much more.
 
 Besides, you are usually able to adapt a _Resource_ or a _SlingHttpServletRequest_ to a custom Sling model, That’s what `@Model(adaptables = …`) is for!
 
@@ -79,9 +79,9 @@ Here is just a [generic whitepaper](https://experienceleague.adobe.com/docs/expe
 
 In JCR, every piece of data is a _Node_. This is the basement floor. If we look at JCR from one floor above – from the _Resource_ tier – every piece of data is a _Resource_. This is exactly how we look at it most of the time.
 
-One resource is distinguished from another by its position in the JCR tree. The position is defined be the _path_. Most often we retrieve a resource by its path. For this we use the dedicated tool named _ResourceResolver_.
+One resource is distinguished from another by its position in the JCR tree. The position is defined by _path_. It is the path that we most often retrieve a resource by. For this, we use the dedicated tool named _ResourceResolver_.
 
-_ResourceResolver_ is quite a complex thing. Enough to say it is user-aware. Same as in a file system of a computer, a user can have access rights to some resources and can be banned from accessing some other. The resources that are not available for the current user, a _ResourceResolver_ will just not retrieve.
+_ResourceResolver_ is quite a complex thing. Enough to say it is user-aware. Same as in a file system of a computer, a user can have access rights to some resources and can be banned from accessing others. A _ResourceResolver_ will just not retrieve the resources that are not available for the current user.
 
 Because of this (and due to some extra reasons) we rarely create a _ResourceResolver_ anew. Instead, we use one that is bundled with a _SlingHttpServletRequest_, or else with a _Resource_ that we already have: `ResourceResolver resolver = request.getResourceResolver()`. We can also retrieve a _ResourceResolver_ via injection in a Sling model:
 
@@ -102,9 +102,9 @@ public class MyModel {
 
 Most commonly used methods of ResourceResolver are `getResource()` and `resolve()`. Both can accept the absolute path of a resource and produce the same result. There are however some differences. 
 
-The `getResource()` method has a rendition that accepts a base resource and a relative path from it. If there isn’t a resource at given path, it returns `null`. 
+The `getResource()` method has a rendition that accepts a base resource and a relative path from it. If there isn’t a resource at a given path, it returns `null`. 
 
-The `resolve()` method has a variant that accepts a request as an argument. This method can alter the provided path under the hood following some path mappings (such can be set up in an AEM instance to provide a similarity of "url rewriting" rules -such as those  sysadmins sometimes use in an HTTP server). If no resource is found at the given path, a non-null value is returned – an instance of `NonExistingResourse`.
+The `resolve()` method has a variant that accepts a request as an argument. This method can alter the provided path under the hood following some path mappings (such can be set up in an AEM instance to provide a similarity of "URL rewriting" rules - a bit like the rules that sysadmins sometimes use in an HTTP server). If no resource is found at the given path, a non-null value is returned – an instance of `NonExistingResourse`.
 
 ```java
 @Model(adaptables = SlingHttpServletRequest.class)
@@ -184,11 +184,11 @@ public class MyModel {
     }
 }
 ```
-What happens here? We’ve got some resource, referenced by the variable `parentResource`, and wish to create a child for it. We call the `createResource()` method and pass into it the parent resource, the name of the newly created resource, and the map of properties the new resource will have from the start.
+What happens here? We’ve got a resource referenced by the variable `parentResource`, and wish to create a child for it. We call the `createResource()` method and pass into it the parent resource, the name of the newly created resource, and the map of properties the new resource will have from the start.
 
-Within the createResource() method, first we check whether the resource at the given path already exists. If this is so, the routine cannot proceed. Otherwise we call the `resolver.create()` method passing the parent resource, the name of the child, and the initial properties. 
+Within the `createResource()` method, first, we check whether the resource at the given path already exists. If this is so, the routine cannot proceed. Otherwise, we call the `resolver.create()` method passing the parent resource, the name of the child, and the initial properties. 
 
-Even as the method is completed without an exception, we still need to commit changes. It’s only then that the resource is actually stored in the JCR.
+Even as the method is completed without exception, we still need to commit changes. It’s only then that the resource is actually stored in the JCR.
 
 Commit is also used when you modify a resource. Remember that modifying just means putting values in the resource’s value map. For that sake the resource is adapted to a particular value map variant – the `ModifiableValueMap`:
 ```
@@ -198,7 +198,7 @@ valueMap.put("jcr:title", "New title");
 resource.getResourceResolver.commit();
 ```
 
-Now you wonder what types of values can be put in such a map? No surprise, these are data types supported by JCR. You can use all primitives and their boxed variants (they will all be coerced to `long`, `double`, and `boolean`), a `String`, and a `Calendar` or `Date` for the date value.
+Now you wonder what types of values can be put into this kind of map. No surprise, these are data types supported by JCR. You can use all primitives and their boxed variants (they will all be coerced to `long`, `double`, and `boolean`), a `String`, and a `Calendar` or `Date` for the date value.
 
 Remember we said that you can retrieve a resource resolver from an existing resource? We use this option here to get one and execute the commit method right away.
 ```
@@ -211,9 +211,9 @@ What is peculiar about ResourceResolver is that it can be adapted to a _PageMana
 
 The _PageManager_ is related to the 3rd tier of data structure in AEM. While the _ResourceResolver_ is a part of Apache Sling, the _PageManager_ is an asset of exactly AEM. It is used to handle that very species of _Resource_ which is also AEM-specific – the _Page_.
 
-Where the ResourceResolver does `getResource()`, the PageManager does `getPage()`. It also has methods for creating a new page, copying, moving and deleting an existing page, and more.
+Where the ResourceResolver does `getResource()`, the _PageManager_ does `getPage()`. It also has methods for creating a new page, copying, moving, and deleting an existing page, and more.
 
-Besides, the PageManager supports a bunch of methods that manage page versions – in AEM a page can be preserved in several renditions with the ability to go back and forth in the history of changes (you might have used the same feature editing e.g. Google Docs).
+Besides, the _PageManager_ supports a bunch of methods that manage page versions – in AEM a page can be preserved in several renditions with the ability to go back and forth in the history of changes (you might have used the same feature editing e.g. Google Docs).
 
 Changes to pages are also committable. Although the _PageManager_ does not have the `commit()` method of its own, you can use a ResourceResolver object, or a Session to save the changes. Surely, you can as well adapt a _PageManager_ instance back to _ResourceResolver_ if you need to:
 ```
@@ -226,25 +226,25 @@ More info oin PageManager is [here](https://developer.adobe.com/experience-manag
 
 ### Session object
 
-Session is the object that encapsulates the logic related to the rights and capabilities of the current user in regards to the content repository.
+A _Session_ is the object that encapsulates the logic related to the rights and capabilities of the current user regarding the content repository.
 
-There is always a user with their defined rights – even if no one entered a login and password. Usually the non-logged user – the anonymous – enjoys only minimal rights, but this can be modified by the server admin. Also, the majority of AEM’s system services act on behalf of some particular user. Session has to deal with all this stuff.
+There is always a user with their defined rights – even if no one entered the login and password. Usually, the non-logged user – the _anonymous_ – enjoys only minimal rights, but this can be modified by the server admin. Also, the majority of AEM’s system services act on behalf of some particular user. _Session_ has to deal with all this stuff.
 
-Session has its own methods for committing changes to the content repository or else discarding them – respectively, `save()` and `refresh(false)`. 
+_Session_ has its own methods for committing changes to the content repository or else discarding them – respectively, `save()` and `refresh(false)`. 
 
-They often call `session.refresh()` within a loop of multiple writes to JCR (e.g. when we update dozens of resources in a batch). AEM is known for getting floating errors that might arise inside a massive writing routine and mess up the process. Refreshing the session helps to fight them.
+They often call `session.refresh()` within a loop of multiple writes to JCR (e.g., when we update dozens of resources in a batch). AEM is known for floating errors that might arise inside a massive writing routine and mess up the process. Refreshing the session helps to fight them.
 
 More info on Session can be found [here](https://developer.adobe.com/experience-manager/reference-materials/spec/jsr170/javadocs/jcr-2.0/javax/jcr/Session.html).
 
 ### ModelFactory. How to "cross-breed" a request and a resource?
 
-Now that you know a lot about manipulating resources, we will visit a question that may look like an advanced one. It however arises quite often in a real-world project.
+Now that you know a lot about manipulating resources, we will visit a question that may look like an advanced one. It, however, arises quite often in a real-world project.
 
 There are occasions when you cannot rely on the provided Sling instantiation/injection mechanism and need to craft a Sling model in your own code.
 
-Such could happen, e.g., when you possess a `@Model(adaptables = Resource.class)` but this time want to adapt it from a `SlingHttpServletRequest`, or just vice versa. You consent that not all the fields will be properly injected. But you actually need just a couple of them, and you are OK with the rest remaining `null`s.
+Such could happen, e.g., when you possess a `@Model(adaptables = Resource.class)` but this time want to adapt it from a `SlingHttpServletRequest`, or just vice versa. You consent that not all the fields will be properly injected. But you actually need just a couple of them, and you are OK with the remaining `null`-s.
 
-Another common case is when you’ve got at hand a _SlingHttpServletRequest_ which encapsulates a resource. You wish that the effective model used the current request but accounted for some foreign resource (and not the one from the current request) when injecting values.
+Another common case is when you’ve got at hand a _SlingHttpServletRequest_ that encapsulates a resource. You wish that the effective model used the current request but accounted for some foreign resource (and not the one from the current request) when injecting values.
 
 For such cases, there is the ModelFactory service that we can inject in our Sling model.
 Look at the following resource structure:
@@ -312,13 +312,13 @@ Let us review the two code snippets. As the instance of `MyFirstModel` is create
 
 Within the `init()` we retrieve a child resource of the current one, by name `secondResource`, and then convert it to a `MySecondModel` object.
 
-If we tried to do this like `secondResource.adaptTo(MySecondModel.class)`, we would fail because `MySecondModel` is request-adapted and we have just the resource. Fortunately, we have the reference to the existing request, and can "cross-breed" it with the reference to `secondResouce` with help of `modelFactory`.
+If we tried to do this like `secondResource.adaptTo(MySecondModel.class)`, we would fail because `MySecondModel` is request-adapted and we have just the resource. Fortunately, we have the reference to the existing request and can "cross-breed" it with the reference to `secondResouce` with help of `modelFactory`.
 
-Eventually we receive an instance of `MySecondModel` which exposes a value map property of `the resource at path _/content/first/second_ while reporting the path of the original request - _/content/first_.
+Eventually, we receive an instance of `MySecondModel` that exposes a value map property of the resource at path `/content/first/second` while reporting the path of the original request - `/content/first`.
 
 > Want a more real-world example? See how we create a list of secondary Sling models ("Tracks") from children of a root resource rendered by the "Album" component [in our sample project](/project/core/src/main/java/com/exadel/aem/core/models/Album.java).  
 
-By using such techniques as those described above, we can leverage versatile backend logic for out AEM components.
+By using such techniques as those described above, we can leverage versatile backend logic for our AEM components.
 
 ---
 
