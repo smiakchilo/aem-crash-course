@@ -28,7 +28,7 @@ The object must be annotated with the `@ObjectClassDefinition` meta-annotation. 
 
 Fields of the config object must be annotated with `@AttrbibuteDefinition` and usually provide default values. Accepted value types are the same as value types available for storing data in JCR. <small>However, the `@AttributeDefinition` annotation has some properties that enrich the user experience. In particular, you can provide a set of `options` that would make it look like a select dropdown.</small>
 
-> You can look at a more real-world sample in the reference project code [here](../../project/core/src/main/java/com/exadel/aem/core/services/impl/TrendyBeatzDownloader.java)
+> You can look at a more real-world looking sample in the reference project code [here](https://github.com/smiakchilo/aem-crash-course/blob/feature/lesson-2.11/project/core/src/main/java/com/exadel/aem/core/services/impl/TrendyBeatzDownloader.java#L129)
 
 Whether the config object is created within a service or separately, it must be referenced with the `@Designate` on the service itself:
 ```java
