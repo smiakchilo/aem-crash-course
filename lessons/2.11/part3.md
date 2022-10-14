@@ -26,7 +26,7 @@ Such an object can be placed separately in the code base. Else, it can be a nest
 
 The object must be annotated with the `@ObjectClassDefinition` meta-annotation. The annotation has several optional fields that mostly affect the presentation of the config in the Felix console at `https://<aem_host>:<aem_port>/console/bindles/configMgr`;
 
-Fields of the config object must be annotated with `@AttrbibuteDefinition` and usually provide default values. Accepted value types are the same as value types available for storing data in JCR. <small>However, the `@AttributeDefinition` annotation has some properties that enrich the user experience of the config console (see below). In particular, you can provide a set of `options` that would make it look like a select dropdown.</small>
+Fields of the config object must be annotated with `@AttrbibuteDefinition` and usually provide default values. Accepted value types are the same as value types available for storing data in JCR. <small>However, the `@AttributeDefinition` annotation has some properties that enrich the user experience. In particular, you can provide a set of `options` that would make it look like a select dropdown.</small>
 
 > You can look at a more real-world sample in the reference project code [here](../../project/core/src/main/java/com/exadel/aem/core/services/impl/TrendyBeatzDownloader.java)
 
