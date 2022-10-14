@@ -15,7 +15,7 @@ To create an instance of _ResourceResolver_, one needs:
 
 ### Creating a system user
 
-Technically, there can be a separate user for every service (or at least a group of services). This would allow setting up access rights with the finest precision. In real life, however, they usually create one system user per project (library).
+Technically, there can be a separate user for every service (or at least a group of services). This would allow setting up access rights with precision. In real life, however, they usually create one system user per project (library).
 
 The system user is created manually. You need to visit `http://<aem_server>:<aem_port>/crx/explorer/index.jsp`, then click "User Administration":
 
@@ -37,25 +37,25 @@ Navigate to `http://<aem_server>:<aem_port>/useradmin`. Enter the name of the se
 
 ![User rights assignment](img/user-rights-assignment.png)
 
-(We do not disclose the user/rights management in full detail here. For a deeper reference please learn [this Adobe document](https://experienceleague.adobe.com/docs/experience-manager-65/administering/security/security.html?lang=en).)
+(We do not disclose the user/rights management in full detail. For a deeper reference read [this Adobe's document](https://experienceleague.adobe.com/docs/experience-manager-65/administering/security/security.html?lang=en).)
 
-Technically, you can pull it into the code base. Many projects (especially distributable libraries) do this to make sure that the concrete user is always present in a target server. Create the same-named folder in a content package (such as _ui.content_) and import the `.content.xml` file describing the user there; then add the folder to the module's `filter.xml` and also to Git.
+A user is also a resource. Technically, you can pull it into the code base. Many projects (especially distributable libraries) do this to make sure that the concrete user is present on a server. Create the same-named folder in a content package (such as _ui.content_) and import the `.content.xml` file that describes the user; then add the folder to the module's `filter.xml` and also to Git.
 
-<u>Important</u>: you cannot preserve in the code base the read/write permissions for the current user. It is not recommended to contain such in a project at all. Instead, they create dedicated content packages (ACL packages) that are then distributed across instances. You can read more about ACL packaging [here](http://www.aemcq5tutorials.com/tutorials/create-system-user-in-aem/#package-system-user:~:text=How%20to%20package%20system%20user%20using%20acs%20commons%20acl%20packager).   
+<u>Important</u>: you cannot preserve in the code base the read/write permissions for the current user. It is not recommended to contain such in a project at all. Instead, they create dedicated content packages (ACL packages) that are distributed across instances. You can read about ACL packaging [here](http://www.aemcq5tutorials.com/tutorials/create-system-user-in-aem/#package-system-user:~:text=How%20to%20package%20system%20user%20using%20acs%20commons%20acl%20packager).   
 
 ### Creating a service mapping
 
-The next step is to map the system user to the services of your project's bundle.
+The next step is to map the system user to the services of your bundle.
 
-Navigate to the Felix ConfigMgr console at `http://<aem_server>:<aem_port>/system/console/configMgr` and find the config by the name _"Apache sling Service User Mapper Service Amendment"_. This is a factory config, so there is the "plus" button. Now click it and create a new mapping. It has the following format:
+Navigate to the Felix configuration console at `http://<aem_server>:<aem_port>/system/console/configMgr` and find the config by the name _"Apache sling Service User Mapper Service Amendment"_. This is a factory config, so there is the "plus" button. Now click it and create a new mapping. It has the following format:
 ```
 <bundle_ID>:<subservice_name>=<user_name>
 ```
 _Bundle ID_, or else the bundle's symbolic name, can be looked up in the `MANIFEST.MF`. E.g., for the _core_ module of our sample project, it is `com.exadel.aem.sample-project.core`.
 
-The _subservice name_ is an arbitrary token you define yourself. There can be a single subservice name for all your mappings, or else different tokens for different kinds of operations like _"readService"_, _"writeService"_, etc.
+The _subservice name_ is an arbitrary token that you create yourself. The word does not matter. There can be a single subservice name for all your mappings, or else different tokens for different kinds of operations like _"readService"_, _"writeService"_, etc.
 
-The _user name_ is just the name of the system user you have created.
+The _user name_ is the name of the system user you have created.
 
 ![Creating a service user mapping](img/creating-service-user-mapping.png)
 
@@ -67,7 +67,7 @@ Now that you have saved the new mapping, you can find it in CRX/DE under the "sy
 
 You will definitely want to have this mapping in your project's code base, or else the user-mapped services won't be able to work. Create a new XML file in your _ui.config_ project under the `config` folder and give it a name like `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sample-project-core.xml`. 
 
-The first part of the name is the fully qualified name of the Apache Sling service we modify the config for. The `.amended` part is a conventional token by which we mark a config extension. The `~sample-project-core` part is just a custom pointer to the bundle for which we've been creating the mapping. 
+The first part of the name is the fully qualified name of the Apache Sling service we modify the config for. `.amended` is a conventional token by which we mark a config extension. The `~sample-project-core` part is just a custom word describing the bundle for which the mapping is created. 
 
 The content of the file will look like 
 ```xml
@@ -113,13 +113,13 @@ public class MyServiceImpl implements MyService {
     }
 }
 ```
-First, we declare a static argument map needed to initialize the _ResourceResolver_. The map mentions `core-service` - this is the service token we used in the mapping config.
+First, we declare a static argument map which is needed to initialize the _ResourceResolver_. The map mentions `core-service` - this is the service token we used in the mapping config.
 
 The main activity is however going inside the `execute()` method. The new _ResourceResolver_ is created from the `resourceResolverFactory` service with the above map. The _ResourceResolver_ is then used to retrieve a common content root. Afterward, it creates a new child resource. The three arguments passed to the `create()` method are the parent resource, the name of the child, and the properties that will form the value map of the child. Finally, the _ResourceResolver_ commits the changes. Otherwise, they will not be actually stored.
 
-<u>BVery important</u>: a _ResourceResolver_ created in code must be manually closed. Not closing a _ResourceResolver_ is a frequent reason for drastic memory leaks. That's why they recommend to handle _ResourceResolver_ with _try-with-resources_ structures.
+<u>Very important</u>: a _ResourceResolver_ created in code must be manually closed. Not closing a _ResourceResolver_ is a frequent reason for a drastic memory leak. That's why they recommend to introduce _ResourceResolver_ with _try-with-resources_.
 
-> In real-world projects, they often extract the logic of creating resource resolvers to a utility class. Another approach you may see [in our sample project](../../project/core/src/main/java/com/exadel/aem/core/services/impl/ResourceResolverHostImpl.java) where a resource resolver is supplied by a dedicated service in an auto-closeable manner.
+> In real-world projects, they often extract the logic of creating resource resolvers to a utility class. Another approach you may see [in our sample project](../../project/core/src/main/java/com/exadel/aem/core/services/impl/ResourceResolverHostImpl.java) where a resource resolver is served by a special OSGi component to work in auto-closeable manner.
 
 ---
 

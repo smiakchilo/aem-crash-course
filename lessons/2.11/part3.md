@@ -70,7 +70,7 @@ The rest of the folders manifest merely more specific configs. Their names follo
 
 <small>Note that the words like _"author"_, _"testing"_, _"prod"_, etc. are just the names or runmodes. These are rather arbitrary names that change from project to project. Yet, usually, they are "talking" names that explain the role of the environment.</small> 
 
-Every `config.` folder contains nodes (or files). The name of the node/file matches the fully qualified name of the configurable service. This is not necessarily a custom service. You may configure an out-of-the-box service as well if you know what properties are manageable. 
+Every `config.*` folder contains nodes (or files). The name of the node/file matches the fully qualified name of the configurable service. This is not necessarily a custom service. You may configure an out-of-the-box service as well if you know what properties are manageable. 
 
 > In the sample project, we provide configuration for the custom service `TrendyBeatzDownloader` in the form of XML node ([see](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/com.exadel.aem.core.services.impl.TrendyBeatzDownloader.xml)).
 > 
@@ -80,7 +80,7 @@ Every `config.` folder contains nodes (or files). The name of the node/file matc
 
 OSGi configurations are often used to make it possible that several instances of a service are created, and every instance is controlled by some particular config values. 
 
-Think, for example, of a service that requests a 3rd-party HTTP server and downloads some data. Imagine that we need to deal with three different HTTP servers simultaneously. A sensible solution is to have three instances of the downloader service, each supplemented with its own endpoint configuration.
+Think, for example, of a service that requests a 3rd-party HTTP server and downloads some data. Imagine that we deal with three different HTTP servers simultaneously. A sensible solution is to have three instances of the downloader service, each supplemented with its own endpoint configuration.
 ```java
 @Component
 @Designate(ocd = DownloaderImpl.Config.class, factory = true)
@@ -116,7 +116,7 @@ Deploying such a service will produce a noticeable effect on the Felix ConfigMgr
 
 ![Factory service config](img/service-factory-config-felix.png)
 
-There is now the "plus" button that allows adding another configuration (= another service instance dealing with yet another _url_). You can dump redundant service instances using the same principle.
+There is now the "plus" button that allows adding another configuration (= another service instance dealing with yet another _url_). You can dump redundant service instances with the "trash" button.
 
 Factory configurations can be set up via the code as well. Look again at the [LogManager's config](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.commons.log.LogManager.factory.config~testProject.cfg.json) in our sample project. The name of the file contains the `factory.config~<something>` part. By replacing `<something>` with tokens of your own, you can create multiple files, each manifesting a single service instance, that will build up to the factory config of the `LogManager` service.
 

@@ -1,26 +1,26 @@
 ## OSGi services
 
-The OSGi standard describes some entities. The most basic is **OSGi Component**. An OSGi component is a part of the project that:
+The OSGi standard describes some entities. The most basic one is **OSGi Component**. An OSGi component is such a programming entity that:
 
 - Can be started and stopped;
-- Can publish or unpublish itself (effectively allowing or disallowing sibling components to interact with itself);
+- Can publish or unpublish itself (effectively allowing or disallowing sibling components to cooperate);
 - Can engage sibling components in interaction.
 
 Sounds vague, isn't it? Moreover, we can easily get confused by the very "component" term. Barely have we learned in-page AEM Components, and here we go with some other sorts of components!.. 
 
 Indeed, these ones are completely different creatures.
 
-That is why among AEM developers, OSGi components are rarely named this way. We use the word **Service** instead. However not as standardized, this term will go.
+That is why among AEM developers, OSGi components are rarely named this way. We use the word **Service** instead. However not as standardized, the term would go.
 
 ## Understanding Service. Service life cycle
 
-In AEM, a Service is a reusable instantiated Java class that comprises some particular functionality.
+In AEM, a Service is a reusable instantiated Java class that comprises particular functionality.
 
-* Service is not just a utility class. We have instances of Services, and they usually have non-static methods. Accordingly, they possess states (have local fields).
-* A service is reusable. That means, we do not create a new instance every time we require the functionality of a service. Most of the time, a service is a complete singleton. In some other cases, services have several instances. But - again - these instances are highly reused: there are far less instances than the number of cases of their usage.
-* Service is automatically instantiated when appropriate. You don't need to call a constructor - the framework does it for you. What is even more important, it picks a proper moment for that.
-* A service registers itself in the _Service Registry_ and is accessible via its interface.
-* Services refer to each other via respective interfaces. If you know a bit about _Spring_, it will be enough to say that services are _autowired_ (however this operation is named differently here).
+* Service is not just a utility class. We have instances of _Services_, and they usually have non-static methods. Accordingly, they possess states (have local fields).
+* _Service_ is reusable. That means, we do not create a new instance every time we require the functionality of a service. Most of the time, a service is a complete singleton. In some other cases, services have several instances. But - again - they are highly reused: there are far less instances than the number of cases of their usage.
+* _Service_ is instantiated when appropriate. You don't need to call a constructor - the framework does it for you. What is even more important, it picks a proper moment for that.
+* _Service_ registers itself in the _Service Registry_ and is accessible via its interface.
+* Services refer to each other via respective interfaces. If you know a bit about _Spring_, it will be enough to say that services are _autowired_ (however, this operation is named differently here).
 
 ```mermaid
 flowchart TD
@@ -50,23 +50,23 @@ flowchart TD
 ```
 
 <details>
-<summary><em style="color:#aaa; font-weight: bold">Why you need a service, and when you need it? (click to expand)</em></summary>
+<summary><em style="color:#aaa; font-weight: bold">Why do you need a service, and when do you need it? (click to expand)</em></summary>
 
 Many a time, a developer faces the question, do I have to create a Service here? Or I'll be fine with a "plain" utility class? Or else should I encapsulate this logic in a Sling Model or POJO?
 
-First, models/POJOs are designed to be just data containers. Some logic is possible there if it concerns converting or re-formatting a particular piece of data. Models are poorly designed if there are noticeable, dozens-lines-long computations going on inside (or new objects are created or stored). Such logic should be moved away from a model.
+First, models/POJOs are designed to be just data containers. Some logic is possible there if it concerns converting or re-formatting a particular piece of data (see, e.g. `isValid()` methods in our sample project's models and DTOs). But a model is poorly designed if there are noticeable, dozen-lines-long computations going on inside. Such logic should be moved away from a model.
 
-Second, for implementing service-like logic, you usually choose between a utility (helper) class and exactly a service. A service wins if there's a need to persist a state (a piece of data, a variable) between calls and/or share it between threads. Note that every HTTP request spans a new thread, and if there's some data to keep between requests, service is your choice.
+Second, for implementing service-like logic, you usually choose between a utility class (a helper) and a service. A service wins if there's a need to preserve a state (a piece of data, a variable) between calls and/or share it between threads. Note that every HTTP request spans a new thread, and if there's some data to keep between requests, service is your choice.
 
-Third, you would definitely want a service class if you you need to refer to another service. The framework will do the "auto-wiring" job for you. Other possible ways to retrieve a reference to another service can be cryptic and error-prone.
+Third, you would definitely want a service if you need to refer to another service. The framework will do the "auto-wiring" job for you. Other ways to retrieve a reference to a service can be cryptic and error-prone.
 
-Fourth, services are polymorphic in nature. A service is almost always referenced via its interface. There can be several implementations of the interface. The framework is responsible for picking up the most suitable one. Besides, you can instruct the framework on what implementations to use in what circumstances.
+Fourth, services are polymorphic in nature. Service is almost always referenced via its interface. There can be several implementations of the interface. The framework is responsible for picking up the most suitable one. Besides, you can instruct the framework on what implementations to use in what circumstances.
 
-This gives you vast possibilities for altering the way the code is executed (e.g., one logic for production use and a slightly different one for unit tests). You can also provide connection points for other developers to extend or modify your code. They can promote another implementation for a service of yours as it fits their needs. Besides, you can override the out-of-the-box services and thus change how AEM itself behaves.
+This gives you vast possibilities for altering the way the code is executed (e.g., one logic for production use and a slightly different one for unit tests). You can also provide connection points for other developers to extend or modify your code. They can have another implementation for a service of yours as it fits their needs. Similarly, you can override the out-of-the-box services and thus change how AEM itself behaves.
 
-Fifth, services can be set up in such a way that an instance is created no sooner than it is actually needed elsewhere in the code. This is useful if the initialization is time- and CPU-consuming (e.g., the service needs to first read some data from the network or load a file). Think of a Windows application that uses the "delayed autostart" option. On the contrary, you cannot control the timing of the initialization of a static variable in a utility class. It usually happens right after the class is loaded in memory.
+Fifth, services can be set up in such a way that an instance is created no sooner than it is actually needed. This is useful if the initialization is time- and CPU-consuming (e.g., the service needs to first read some data from the network or load a file). Think of a Windows application that uses the "delayed autostart" option. On the contrary, you cannot control the timing of initialization in a utility class. It usually happens right after the class is loaded in memory.
 
-However, there are such kinds of logic that a good old utility class would win as the best solution. You may have a bunch of methods that are implemented in the functional style (process their arguments and return a value without side effects). May it be these methods refer to none of the other services. You are not going to provide alternations of these methods, nor do you plan a specific rendition for tests. In this case, there's no need to wrap them in OSGi service.
+However, there are such kinds of logic that a good old utility class would be the best solution. You may have a bunch of methods that are implemented in the functional style (process their arguments and return a value without side effects). May it be these methods refer to none of the other services. You are not going to provide alternations of these methods, nor do you plan a specific rendition for tests. In this case, there's no need to wrap them in OSGi service.
 </details>
 
 #### Class composition of a service
@@ -94,11 +94,11 @@ public class ModelProcessorImpl implements ModelProcessor {
 
 The `@Component`-s `service` property is optional. It reiterates what interface the current class implements.
 
-Interestingly, the interface must not necessarily be a custom one. A core interface (such as `Runnable`, `Callable`, or even a functional interface, e.g., `Function<Boo, Bar>`) would do.
+Interestingly, the interface must not necessarily be a custom one. A core interface (such as `Runnable`, `Callable`, or even a functional interface, e.g., `Function<Foo, Bar>`) would do.
 
-<small>Moreover, with `service = ...` you can even declare _the current class_ as an "interface" for itself! This is a bit of a hacky solution. But it will work if you cannot declare a separate interface and/or absolutely don't want another implementation to be introduced by someone else.</small>
+<small>Moreover, with `service = ...` you can declare _the current class_ as an "interface" for itself! This is a bit of a hacky solution. But it will work if you would not support a separate interface and/or absolutely don't want another implementation to be introduced by someone else.</small>
 
-By an old gold tradition, the implementations of services are named `...Impl` and are usually placed in a subpackage by the name of `impl`. (This tradition is not strictly obeyed, though).
+By an old gold tradition, the implementations of services are named `...Impl` and are usually placed in a subpackage by the name of `.impl`. (This tradition is not strictly obeyed, though).
 
 ```
 com
@@ -112,7 +112,7 @@ com
 
 #### Life cycle methods
 
-A service class can have arbitrary number of methods. Some of them can be mapped to the three service's life cycle stages. The mapping is done by the special annotations: `@Activate`, `@Deactivate`, and `@Modified`.
+A service can have any number of methods, for sure. Any of them can be mapped to the three service's life cycle stages. The mapping is done by the special annotations: `@Activate`, `@Deactivate`, and `@Modified`.
 
 ```java
 
@@ -142,9 +142,7 @@ public class MyServiceImpl implements Runnable {
 }
 ```
 
-None of the _activate_, _deactivate_, or _modified_ methods are necessary if there's no specific logic to be implemented at a life cycle stage.
-
-The same method can be attached more than one life cycle annotation. E.g., a fairly common case is making one method be responsible for both _activate_ and _modified_:
+None of the _activate_, _deactivate_, or _modified_ methods are necessary. The same method can carry more than one life cycle annotation. A fairly common case is making one method be responsible for both _activate_ and _modified_. This is no wonder: both can be used for the same goal- read the user settings and alter the service's behavior.
 
 ```
 @Activate
@@ -153,16 +151,15 @@ private void consumeSettings(Map<String, Object> settings)
    // implementation code        
 }
 ```
+The settings can be passed directly as a method's arguments. (It rather means that if you create such a method and add an argument like `Map<String,Object> settings`, the framework will be clever enough to understand that you want the _settings_ passed here).
 
-This combination is not occasional. Both _activate_ and _modified_ routines are often used for the same goal: to read the user settings for the current service. The settings can moreover be passed directly as the method's argument. (It rather means that if you create such a method and add an argument like `Map<String,Object> settings`, the framework will be clever enough to understand that you want the settings passed here.)
-
-Apart from `Map<String,Object>` of settings, the _activate_ or _modified_ method (or else the combination of both) can consume arguments of types:
+Apart from `Map<String,Object>`, the _activate_ or _modified_ method can consume arguments of types:
 
 * `BundleContext` - context for the bundle that holds the component that is being activated. See spec [here](https://docs.osgi.org/javadoc/r4v43/core/org/osgi/framework/BundleContext.html);
-* `ComponentContext` - context for the current service. Read more [here](https://developer.adobe.com/experience-manager/reference-materials/6-4/javadoc/org/osgi/service/component/ComponentContext.html);
-* or an object representing the service config (see more [in the next lesson](part3.md)).
+* `ComponentContext` - context for the current service. Read on it [here](https://developer.adobe.com/experience-manager/reference-materials/6-4/javadoc/org/osgi/service/component/ComponentContext.html);
+* Or an object representing the user config (see more [in the next lesson](part3.md)).
 
-You can even declare all multiple parameters like
+You can even declare many or parameters at the same time like
 
 ```
 @Activate
@@ -178,20 +175,19 @@ private void onServiceUpdate(
 
 The order does not matter.
 
-There are advanced tips and tricks regarding usage og OSGi services life cycle stages. Look for them
-is [this article](https://liferay.dev/blogs/-/blogs/revisiting-osgi-ds-annotations#:~:text=not%20be%20invoked.-,%40Activate,Spring's%20afterPropertiesSet()%20InitializingBean%20interface)
+There are advanced tips regarding OSGi service's life cycle. Look for them
+in [this article](https://liferay.dev/blogs/-/blogs/revisiting-osgi-ds-annotations#:~:text=not%20be%20invoked.-,%40Activate,Spring's%20afterPropertiesSet()%20InitializingBean%20interface)
 or elsewhere on the Internet.
 
 #### Control the timing of the service's start
 
-Look at the `@Component`-s `immediate` property. It states that the instance of service will be created as soon as the OSGi framework takes control of the current bundle. As we said above, this is not necessary. Skip `immediate = true`, and the service will be instantiated, literally, after the first attempt to call it elsewhere in the code. 
+Take heed to the `@Component`-s `immediate` property. It states that the instance of service will be created as soon as the OSGi framework takes control of the current bundle. As we said, this is not necessary. Skip `immediate = true`, and the service will be instantiated only after an attempt to call it elsewhere in the code. 
 
-<u>Important</u>: if you created a bunch of services that have references to each other, at least one should be `immediate = true`, or else they will just be "sitting there waiting for each other", and none will start.
+<u>Important</u>: If you created a bunch of services that have references to each other, at least one should be `immediate = true`, or else they will just be "sitting there waiting for each other", and none will start.
 
 #### Properties of a service
 
-The OSGi standard envisages that a service has an arbitrary set of additional properties specified via the dedicated
-annotation key:
+The OSGi standard envisages that a service has an arbitrary set of additional properties specified via the dedicated annotation key:
 
 ```
 @Component(
@@ -205,14 +201,14 @@ annotation key:
 )
 ```
 
-(Beware: there are two keys within `@Component`: `property` and `properties`. Confusing as it is, we work with the first one.)
+(<u>Beware</u>: There are two keys within `@Component`: `property` and `properties`. Confusing as it is, we work with the first one.)
 
-Every such property is a string containing a key and a value separated by the equality sign. There are plenty of predefined property names, e.g. `service.ranking` or `service.pid`. You can create custom ones. Later we'll see how you can use them.
+Every such property is a string containing a key and a value separated by `=`. There are plenty of predefined property names, e.g. `service.ranking` or `service.pid`. You can create custom ones. Later we'll see how you can use them.
 
 <details>
-<summary><em style="color:#aaa; font-weight: bold">You may wonder how all these annotations and properties affect the OSGi framework (click to expand)</em></summary>
+<summary><em style="color:#aaa; font-weight: bold">How exactly these annotations and properties affect the OSGi framework (click to expand)</em></summary>
 
-Same as with `MANIFEST.MF`, annotations are there just to produce some metadata. When the bundle is deployed to an AEM server, they do not matter anymore. Instead, the framework considers metadata files that were created while building the project (they were created along with `MANIFEST.MF`). For every service, there is an XML file within the `OSGI-INF` folder.
+Same as with `MANIFEST.MF`, annotations are there just to produce some metadata. When the bundle is deployed to an AEM server, they do not matter anymore. Instead, the framework considers metadata files that are created alongside `MANIFEST.MF`. For every service, there is one XML file created within the `OSGI-INF` folder.
 
 ![Service definitions](img/service-definitions.png)
 
@@ -241,7 +237,7 @@ A single definition might look like the following (a live snippet from the sampl
 
 Same as with the `MANIFEST.MF` file, you might one day have the need to add a missing service definition manually. 
 
-<small>It may happen, in particular, when creating unit tests for a service. If you wish to run tests one by one (via, e.g., the IntelliJ IDEA interface and not with a Maven command), you might face the situation that the service descriptions for test services are not created or are obsolete. It is the Maven plugin that creates the definitions, and the plugin has not been run. Instead, you can copy an XML file(-s) from the `target` folder of the "original" module and paste into the manually created `OSGI-INF` folder under the test resources root. </small>
+<small>It may happen, in particular, when creating unit tests for a service. If you wish to run tests one by one (via, e.g., the IntelliJ IDEA interface and not with a Maven command), you might face the situation that the service descriptions for test services are not at all created or are obsolete. It is the Maven plugin that creates the definitions, and the plugin has not been run in this case. Instead, you can copy an XML file(-s) from the `target` folder of the "original" module and paste in the manually created `OSGI-INF` folder under the test resources root. </small>
 </details>
 
 ### How services commute. Referencing a service
@@ -259,12 +255,12 @@ public class MyServiceImpl implements MyService {
 }
 ```
 
-This is the most basic case. The OSGi framework will look through the service registry, find the appropriate service implementation, create an instance of it (if not yet instantiated), and inject it into the field. If anything in this chain of action fails, the field will remain `null`.
+This is the most basic case. The OSGi framework will look through the _service registry_, find the appropriate service implementation, create an instance of it (if not yet instantiated), and inject it into the field. If anything in this chain of action fails, the field will remain `null`.
 
 <details>
-<summary><em style="color:#aaa; font-weight: bold">What will the framework do if there are more than one implementation (click to expand)</em></summary>
+<summary><em style="color:#aaa; font-weight: bold">What will the framework do if there are more than one suitable implementation? (click to expand)</em></summary>
 
-<b>Case 1: Selecting an implementation unfiltered</b>
+<b>Case 1: Selecting an implementation by the ranking (unfiltered)</b>
 
 The framework picks the most appropriate service implementation by the `ranking`. Ranking can be specified in the `@Component` annotation like the following:
 
@@ -280,11 +276,11 @@ public class MyServiceImpl implements MyService {
 }
 ```
 
-Of the contenders, the service with the greatest ranking number is elected. If there are two or more services with equal rankings (including those with the default non-specified ranking), the one with the lowest _PID_ is selected. Lower _PID_-s are usual for the out-of-the-box services that initialize earlier. Thus, the standard implementations prevail unless you impose an "overriding" one that would have a non-default ranking set by you.
+Of the contenders, the service with the greatest ranking is elected. If there are several services with equal rankings (including those with the default/non-specified ranking), the one with the lowest _PID_ is selected. Lower _PID_-s are usual for the out-of-the-box services that initialize earlier. Thus, the standard implementations prevail. They do unless you impose an "override" that would have a non-default ranking set by you.
 
 <b>Case 2: Selecting an implementation based on a filter</b>
 
-Sometimes you know the parameters the referenced service implementation must match. The good practice is to state such parameter as a service's property. Consider the following example:
+Sometimes you know the parameters that the referenced service implementation must match. The good practice is to state such parameter as a service's property. Consider the following example:
 
 ```java
 public interface ProducerService {
@@ -327,21 +323,21 @@ public class Consumer implements ConsumerService {
 }
 ```
 
-You can provide the `target` parameter to `@Reference` in which you specify a query in the format known as "LDAP search filter". Basically, this is nothing more than an equality statement that cites the key and the desired value. apart from strings, you can play around with statements comparing numeric and boolean values.
+You can provide the `target` parameter to `@Reference` in which you specify a query in the format known as _"LDAP search filter"_. Basically, this is nothing more than a bracketed equality that names the key and the desired value, like `target = "(param=Foo)"`. Apart from strings, you can play around with statements comparing numeric and boolean values.
 
-The "terminal" case of such statement is the one that requires the precise name of implementation class:
+The "terminal" case of such statement is one that requires the precise name of implementation class:
 ```
 @Reference(target = "component.name=com.exadel.aem.core.services.impl.AlbumRetrieverImpl")
 ```
 
-You see, it somehow breaks the very idea of referencing interfaces rather than classes, but is still used in some real-world scenarios.
+You see, it somehow breaks the very idea of referencing interfaces rather than classes. Yet it is still used in some real-world scenarios.
 </details>
 
 #### Referencing a collection of services
 
-Sometimes you may want to link all the available implementations at once. A use case: the implementations are kind of "suppliers" of some data, and you want to retrieve data from all the suppliers.
+Sometimes you may want to link all the available implementations at once. A use case: the implementations are kind of "suppliers" of some data, and you want to retrieve data from all sources at once.
 
-In this situation, you inject not a single object but a collection of objects and provide the `cardinality` value. Additionally, you may need to specify the _GREEDY_ policy option which means that you expect the current service to "grab and gold" as many matching references as possible. 
+In this situation, you inject not a single object but a collection of objects and provide the `cardinality` value. Additionally, you may need to specify the _GREEDY_ policy option, which means that you expect the current service to "grab and hold" as many references as possible. 
 ```
 @Reference(cardinality = ReferenceCardinality.MULTIPLE, policyOption = ReferencePolicyOption.GREEDY)
 private List<MyService> myServices;
@@ -350,21 +346,21 @@ private List<MyService> myServices;
 > Find out the use of such an approach in the sample project's [AlbumRetrieverImpl](../../project/core/src/main/java/com/exadel/aem/core/services/impl/AlbumRetrieverImpl.java).
 
 <details>
-<summary><em style="color:#aaa; font-weight: bold">New references can be added event after the current service is started (click to expand)</em></summary>
+<summary><em style="color:#aaa; font-weight: bold">New references can be added even after the current service is started (click to expand)</em></summary>
 
-Injecting a collection of services has an interesting nuance. Implementations of the current service interface may reside in different bundles. And the bundles, as you know, can be installed and uninstalled independently of each other at any time. Therefore, we can face a situation when the current service has been working for a while already, and a new implementation of `MyService` has just arrived. Will it be added to the `myServices` list?
+Injecting a collection of services has an interesting nuance. Implementations of the current interface may reside in different bundles. And the bundles, you know, can be installed and uninstalled independently of each other at any time. Therefore, we can face a situation when the current service having the `myServices` field has been working for a while already, but a new implementation of `MyService` has just arrived. Will it be added to the `myServices` list?
 
 Depends on the two properties you can specify for the `@Reference` annotation: `referencePolicy`
 and `referencePolicyOption`.
 
-Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be supplemented as soon as a new service implementation becomes available. The same principle applies to the situation when a bundle containing a reference unloads.
+Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new service implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (a bundle is unloaded).
 
 Above all, setting `referencePolicy` to _DYNAMIC_ allows event-driven reference management because the _bind_ and _unbind_ methods are honored. See the next chapter for detail.
 </details> 
 
 #### Event-driven references. Binding and unbinding
 
-The OSGi framework supports calling a particular method of a service when a reference arrives or departs. The name of the "on arrival" method can be specified in the `bind` property. The `unbind` property specifies the name of the method that is called when a reference is being removed.
+The OSGi framework supports calling a particular method of service when a reference arrives or departs. The name of the "on arrival" method can be specified in the `bind` property. The `unbind` property specifies the name of the method that is called when a reference is removed.
 
 How can one use these methods? For example, you can store the collection of references in a map rather than a list.
 
@@ -434,7 +430,7 @@ public class MyModel {
 }
 ```
 
-We can pick up the desired implementation with the `filter` property (the direct analog of `@Reference(target = "...")`). But there isn't any analog of `cardinality`, nor policy options or binding methods. All in all, it just reminds us that Sling Models are not designed for complex logic.
+We can pick up the desired implementation with the `filter` property (the direct analog of `@Reference(target = "...")`). But there isn't any analog of `cardinality`, nor policy options or binding methods. All in all, it just reminds us that Sling models are not designed for complex logic.
 
 Another way is to retrieve a reference to a service with `SlingScriptHelper`. This way we can even retrieve an array of instances, although indirectly:
 ```java
@@ -451,12 +447,12 @@ public class MyModel {
     @PostConstruct
     private void init() {
         myService = slingScriptHelper.getService(MyService.class);
-        myOtherServices = slingScriptHelper.getServices(MyOtherService.class,"(foo=bar)"); // a LDAP search filter can be passed as the second argument
+        myOtherServices = slingScriptHelper.getServices(MyOtherService.class,"(foo=bar)"); // A LDAP search filter can be passed as the second argument
     }
 }
 ```
 
-Interestingly, a service can be injected directly into the HTL markup
+Interestingly, a service can be injected directly into the HTL markup:
 ```html
 <p data-sly-use.search="com.exadel.aem.services.SearchServiceImpl">
    ${search.results}
