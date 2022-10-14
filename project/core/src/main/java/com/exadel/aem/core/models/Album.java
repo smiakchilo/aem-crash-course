@@ -1,5 +1,7 @@
 package com.exadel.aem.core.models;
 
+import com.day.cq.commons.jcr.JcrConstants;
+import com.exadel.aem.core.Constants;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -36,7 +38,7 @@ public class Album {
     @OSGiService
     private ModelFactory modelFactory;
 
-    @ValueMapValue(name = "jcr:title")
+    @ValueMapValue(name = JcrConstants.JCR_TITLE)
     private String title;
 
     @ValueMapValue
@@ -54,7 +56,7 @@ public class Album {
     @PostConstruct
     private void init() {
         artist = Optional.ofNullable(artistId)
-                .map(id -> resolver.getResource("/content/sample-project/us/en/artists/" + id))
+                .map(id -> resolver.getResource(Constants.ARTISTS_FOLDER + "/" + id))
                 .map(res -> modelFactory.getModelFromWrappedRequest(request, res, Artist.class))
                 .orElse(null);
         Resource tracksResource = resource.getChild("tracks");
