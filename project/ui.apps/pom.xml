@@ -29,12 +29,6 @@
                     <group>com.exadel.aem</group>
                     <name>sample-project.ui.apps</name>
                     <packageType>application</packageType>
-                    <repositoryStructurePackages>
-                        <repositoryStructurePackage>
-                            <groupId>com.exadel.aem</groupId>
-                            <artifactId>sample-project.ui.apps.structure</artifactId>
-                        </repositoryStructurePackage>
-                    </repositoryStructurePackages>
                     <dependencies>
                         <dependency>
                             <groupId>com.adobe.cq</groupId>

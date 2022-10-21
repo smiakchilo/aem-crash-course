@@ -28,12 +28,6 @@
                     </properties>
                     <packageType>container</packageType>
                     <showImportPackageReport>false</showImportPackageReport>
-                    <repositoryStructurePackages>
-                        <repositoryStructurePackage>
-                            <groupId>com.exadel.aem</groupId>
-                            <artifactId>sample-project.ui.apps.structure</artifactId>
-                        </repositoryStructurePackage>
-                    </repositoryStructurePackages>
                 </configuration>
             </plugin>
             <plugin>
