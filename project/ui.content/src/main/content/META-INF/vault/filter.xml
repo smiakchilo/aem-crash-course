@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <workspaceFilter version="1.0">
-    <filter root="/conf/sample-project"/>
+    <filter root="/conf/sample-project" mode="merge"/>
     <filter root="/content/sample-project" mode="merge"/>
+    <filter root="/content/experience-fragments/sample-project" mode="merge"/>
+    <filter root="/content/dam/sample-project" mode="merge"/>
 </workspaceFilter>

@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
-          xmlns:cq="http://www.day.com/jcr/cq/1.0"
-          xmlns:jcr="http://www.jcp.org/jcr/1.0"
-          jcr:primaryType="cq:Page">
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+    jcr:primaryType="cq:Page">
     <jcr:content
-            cq:allowedTemplates="[/conf/sample-project/settings/wcm/templates/(?!xf-).*]"
-            cq:conf="/conf/sample-project"
-            jcr:primaryType="cq:PageContent"
-            jcr:title="Sample AEM Project"
-            sling:configRef="/conf/sample-project"
-            sling:redirect="{Boolean}true"
-            sling:redirectStatus="{Long}302"
-            sling:resourceType="foundation/components/redirect"
-            redirectTarget="/content/sample-project/us/en/home"/>
+        cq:allowedTemplates="[/conf/sample-project/settings/wcm/templates/(?!xf-).*]"
+        cq:conf="/conf/sample-project"
+        cq:redirectTarget="/content/sample-project/us/en"
+        cq:template="/conf/sample-project/settings/wcm/templates/page-content"
+        jcr:primaryType="cq:PageContent"
+        jcr:title="Sample AEM Project"
+        sling:configRef="/conf/sample-project"
+        sling:redirect="{Boolean}true"
+        sling:redirectStatus="{Long}302"
+        sling:resourceType="sample-project/components/page">
+        <image jcr:primaryType="nt:unstructured">
+            <file/>
+        </image>
+    </jcr:content>
     <us/>
 </jcr:root>

@@ -1,6 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -24,9 +26,7 @@
                 <configuration>
                     <group>com.exadel.aem</group>
                     <packageType>container</packageType>
-                    <properties>
-                        <cloudManagerTarget>all</cloudManagerTarget>
-                    </properties>
+                    <!-- skip sub package validation for now as some vendor packages like CIF apps will not pass -->
                     <skipSubPackageValidation>true</skipSubPackageValidation>
                     <embeddeds>
                         <embedded>
@@ -51,6 +51,23 @@
                             <artifactId>sample-project.ui.config</artifactId>
                             <type>zip</type>
                             <target>/apps/sample-project-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>core.wcm.components.content</artifactId>
+                            <type>zip</type>
+                            <target>/apps/sample-project-vendor-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>core.wcm.components.core</artifactId>
+                            <target>/apps/sample-project-vendor-packages/application/install</target>
+                        </embedded>
+                        <embedded>
+                            <groupId>com.adobe.cq</groupId>
+                            <artifactId>core.wcm.components.config</artifactId>
+                            <type>zip</type>
+                            <target>/apps/sample-project-vendor-packages/application/install</target>
                         </embedded>
                     </embeddeds>
                 </configuration>
@@ -79,6 +96,62 @@
         </plugins>
     </build>
 
+    <profiles>
+        <profile>
+            <id>autoInstallSinglePackage</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-package</id>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                                <configuration>
+                                    <targetURL>http://${aem.host}:${aem.port}/crx/packmgr/service.jsp</targetURL>
+                                    <failOnError>true</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>autoInstallSinglePackagePublish</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.day.jcr.vault</groupId>
+                        <artifactId>content-package-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-package-publish</id>
+                                <goals>
+                                    <goal>install</goal>
+                                </goals>
+                                <configuration>
+                                    <targetURL>http://${aem.publish.host}:${aem.publish.port}/crx/packmgr/service.jsp
+                                    </targetURL>
+                                    <failOnError>true</failOnError>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
     <dependencies>
         <dependency>
             <groupId>com.exadel.aem</groupId>
@@ -96,6 +169,17 @@
             <groupId>com.exadel.aem</groupId>
             <artifactId>sample-project.ui.config</artifactId>
             <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.adobe.cq</groupId>
+            <artifactId>core.wcm.components.content</artifactId>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>com.adobe.cq</groupId>
+            <artifactId>core.wcm.components.config</artifactId>
             <type>zip</type>
         </dependency>
     </dependencies>
