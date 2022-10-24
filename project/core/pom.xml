@@ -18,10 +18,12 @@
 
     <build>
         <plugins>
+
             <plugin>
                 <groupId>org.apache.sling</groupId>
                 <artifactId>sling-maven-plugin</artifactId>
             </plugin>
+
             <plugin>
                 <groupId>biz.aQute.bnd</groupId>
                 <artifactId>bnd-maven-plugin</artifactId>
@@ -32,9 +34,13 @@
                             <goal>bnd-process</goal>
                         </goals>
                         <configuration>
-                            <bnd><![CDATA[
-                                    Import-Package: javax.annotation;version=0.0.0,*
-                                ]]></bnd>
+                            <bnd>
+                                <![CDATA[
+                                    Bundle-SymbolicName: ${project.groupId}.${project.artifactId}
+                                    Import-Package: !javax.annotation.meta,javax.annotation;version=0.0.0,*
+                                    -includeresource: jsoup-${org.jsoup.version}.jar;lib:=true
+                                ]]>
+                            </bnd>
                         </configuration>
                     </execution>
                 </executions>
@@ -116,15 +122,17 @@
             <groupId>org.osgi</groupId>
             <artifactId>org.osgi.util.tracker</artifactId>
         </dependency>
-        <!-- Other Dependencies -->
+        <!-- Logging Dependencies -->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <!-- Apache Sling Dependencies -->
         <dependency>
-            <groupId>javax.jcr</groupId>
-            <artifactId>jcr</artifactId>
+            <groupId>org.apache.sling</groupId>
+            <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
+        <!-- Servlet API -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
@@ -137,22 +145,25 @@
             <groupId>org.apache.sling</groupId>
             <artifactId>org.apache.sling.servlets.annotations</artifactId>
         </dependency>
+        <!-- JCR -->
         <dependency>
-            <groupId>com.adobe.aem</groupId>
-            <artifactId>uber-jar</artifactId>
+            <groupId>javax.jcr</groupId>
+            <artifactId>jcr</artifactId>
         </dependency>
+        <!-- Core Components -->
         <dependency>
             <groupId>com.adobe.cq</groupId>
             <artifactId>core.wcm.components.core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.sling</groupId>
-            <artifactId>org.apache.sling.models.api</artifactId>
         </dependency>
         <!-- Misc -->
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
+        </dependency>
+        <!-- Adobe AEM Dependencies -->
+        <dependency>
+            <groupId>com.adobe.aem</groupId>
+            <artifactId>uber-jar</artifactId>
         </dependency>
         <!-- Testing -->
         <dependency>
