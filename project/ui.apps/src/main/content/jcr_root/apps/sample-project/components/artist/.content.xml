@@ -3,6 +3,6 @@
         xmlns:cq="http://www.day.com/jcr/cq/1.0"
         xmlns:jcr="http://www.jcp.org/jcr/1.0"
         jcr:primaryType="cq:Component"
-        jcr:title="Album"
-        jcr:description="Album Component"
+        jcr:title="Artist"
+        jcr:description="Artist Component"
         componentGroup="Sample AEM Project - Content"/>

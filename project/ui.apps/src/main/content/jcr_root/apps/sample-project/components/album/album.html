@@ -1,6 +1,6 @@
 <sly data-sly-use.album="com.exadel.aem.core.models.Album"></sly>
 <img src="${album.imagePath}" alt="${album.title}"/>
-<div class="album-title">${album.title}</div>
+<div data-sly-test="${album.briefDisplay}" class="album-title">${album.title}</div>
 <div class="album-artist">
     <a href="${album.artist.path @ context='uri'}" title="${album.artist.title}">${album.artist.title}</a>
 </div>

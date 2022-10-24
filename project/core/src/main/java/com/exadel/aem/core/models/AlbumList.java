@@ -2,6 +2,7 @@ package com.exadel.aem.core.models;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.day.cq.wcm.api.PageManager;
+import com.exadel.aem.core.Constants;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
@@ -57,9 +58,10 @@ public class AlbumList {
         }
         Iterator<Resource> resourceIterator = parent.listChildren();
         Spliterator<Resource> resourceSpliterator = Spliterators.spliteratorUnknownSize(resourceIterator, 0);
-        Stream<Resource> stream = StreamSupport.stream(resourceSpliterator, false);
-        List<Resource> resourceList = stream
+        List<Resource> resourceList = StreamSupport
+                .stream(resourceSpliterator, false)
                 .filter(res -> !JcrConstants.JCR_CONTENT.equals(res.getName()))
+                .map(res -> res.getChild(Constants.ALBUM_RESOURCE_PATH))
                 .collect(Collectors.toList());
         return Optional.of(resourceList);
     }

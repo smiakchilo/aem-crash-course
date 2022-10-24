@@ -59,7 +59,7 @@ public class Album {
     @PostConstruct
     private void init() {
         artist = Optional.ofNullable(artistId)
-                .map(id -> resolver.getResource(Constants.ARTISTS_FOLDER + "/" + id))
+                .map(id -> resolver.getResource(Constants.ARTISTS_FOLDER + "/" + id + Constants.ARTIST_RESOURCE_PATH))
                 .map(res -> modelFactory.getModelFromWrappedRequest(request, res, Artist.class))
                 .orElse(null);
         Resource tracksResource = resource.getChild("tracks");
