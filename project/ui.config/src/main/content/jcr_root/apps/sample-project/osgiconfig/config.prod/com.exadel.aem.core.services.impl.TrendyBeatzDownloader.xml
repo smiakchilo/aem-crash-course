@@ -2,5 +2,4 @@
 <jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0"
           jcr:primaryType="sling:OsgiConfig"
           listUrl="https://trendybeatz.com/artist-albums"
-          linkPattern="^https://trendybeatz.com/artist-albums/\d+/[\w-]+$"
-        />
+          linkPattern="^https://trendybeatz.com/artist-albums/\d+/[\w-]+$"/>

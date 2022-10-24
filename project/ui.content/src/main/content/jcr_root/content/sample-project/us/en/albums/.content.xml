@@ -1,8 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:cq="http://www.day.com/jcr/cq/1.0"
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0"
           xmlns:jcr="http://www.jcp.org/jcr/1.0"
           jcr:primaryType="cq:Page">
     <jcr:content
             jcr:primaryType="cq:PageContent"
-            jcr:title="Albums Root"/>
+            jcr:title="Albums Root"
+            cq:template="/conf/sample-project/settings/wcm/templates/page-content"
+            sling:resourceType="sample-project/components/page">
+        <root
+                jcr:primaryType="nt:unstructured"
+                sling:resourceType="sample-project/components/container"
+                layout="responsiveGrid">
+            <container
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="sample-project/components/container">
+                <title
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="sample-project/components/title"
+                        jcr:title="Albums"/>
+                <container
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="sample-project/components/container"
+                        layout="responsiveGrid">
+                    <albums
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="sample-project/components/albumList"/>
+                </container>
+            </container>
+        </root>
+    </jcr:content>
 </jcr:root>

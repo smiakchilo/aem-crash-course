@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0" xmlns:cq="http://www.day.com/jcr/cq/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-    jcr:primaryType="cq:Page">
+<jcr:root xmlns:sling="http://sling.apache.org/jcr/sling/1.0"
+          xmlns:cq="http://www.day.com/jcr/cq/1.0"
+          xmlns:jcr="http://www.jcp.org/jcr/1.0"
+          xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+          jcr:primaryType="cq:Page">
     <jcr:content
-        pageTitle="Sample AEM Project"
-        jcr:primaryType="cq:PageContent"
-        jcr:title="en"
-        cq:contextHubPath="/etc/cloudsettings/default/contexthub"
-        cq:contextHubSegmentsPath="/etc/segmentation/contexthub"
-        cq:template="/conf/sample-project/settings/wcm/templates/page-content"
-        sling:resourceType="sample-project/components/page">
+            pageTitle="Sample AEM Project"
+            jcr:primaryType="cq:PageContent"
+            jcr:title="en"
+            cq:template="/conf/sample-project/settings/wcm/templates/page-content"
+            sling:resourceType="sample-project/components/page">
         <root
-            jcr:primaryType="nt:unstructured"
-            sling:resourceType="sample-project/components/container"
-            layout="responsiveGrid">
-            <container
                 jcr:primaryType="nt:unstructured"
-                sling:resourceType="sample-project/components/container">
+                sling:resourceType="sample-project/components/container"
+                layout="responsiveGrid">
+            <container
+                    jcr:primaryType="nt:unstructured"
+                    sling:resourceType="sample-project/components/container">
                 <title
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="sample-project/components/title"/>
-                <container
-                    jcr:primaryType="nt:unstructured"
-                    sling:resourceType="sample-project/components/container"
-                    layout="responsiveGrid">
-                    <diagnosticComponent
                         jcr:primaryType="nt:unstructured"
-                        sling:resourceType="sample-project/components/diagnosticComponent"
-                        text="Hello World"
-                        numericValue="{Long}42"/>
+                        sling:resourceType="sample-project/components/title"/>
+                <container
+                        jcr:primaryType="nt:unstructured"
+                        sling:resourceType="sample-project/components/container"
+                        layout="responsiveGrid">
+                    <diagnosticComponent
+                            jcr:primaryType="nt:unstructured"
+                            sling:resourceType="sample-project/components/diagnosticComponent"
+                            text="Hello World"
+                            numericValue="{Long}42"/>
                 </container>
             </container>
         </root>
