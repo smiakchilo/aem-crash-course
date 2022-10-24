@@ -157,7 +157,7 @@ Apart from `Map<String,Object>`, the _activate_ or _modified_ method can consume
 
 * `BundleContext` - context for the bundle that holds the component that is being activated. See spec [here](https://docs.osgi.org/javadoc/r4v43/core/org/osgi/framework/BundleContext.html);
 * `ComponentContext` - context for the current service. Read on it [here](https://developer.adobe.com/experience-manager/reference-materials/6-4/javadoc/org/osgi/service/component/ComponentContext.html);
-* Or an object representing the user config (see more [in the next lesson](part3.md)).
+* Or an object representing the user config (see more [in the next lesson](../2.12/part1.md)).
 
 You can even declare many or parameters at the same time like
 
