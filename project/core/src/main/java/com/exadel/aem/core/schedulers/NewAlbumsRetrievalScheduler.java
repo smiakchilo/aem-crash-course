@@ -1,4 +1,4 @@
-package com.exadel.aem.core.services.impl;
+package com.exadel.aem.core.schedulers;
 
 import com.exadel.aem.core.services.AlbumRetriever;
 import org.apache.sling.commons.scheduler.ScheduleOptions;

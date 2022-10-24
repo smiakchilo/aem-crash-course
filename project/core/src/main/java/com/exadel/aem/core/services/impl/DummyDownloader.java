@@ -11,6 +11,7 @@ import java.util.function.Supplier;
 
 @Component
 public class DummyDownloader implements Supplier<List<AlbumDto>> {
+    private static final String DEFAULT_IMAGE = "https://live.staticflickr.com/13/17130986_f1c38c12bd_b.jpg";
 
     @Override
     public List<AlbumDto> get() {
@@ -18,6 +19,7 @@ public class DummyDownloader implements Supplier<List<AlbumDto>> {
                 "Non-existing album",
                 new ArtistDto("No one", StringUtils.EMPTY),
                 2000,
+                DEFAULT_IMAGE,
                 Collections.emptyList());
         return Collections.singletonList(testAlbumDto);
     }

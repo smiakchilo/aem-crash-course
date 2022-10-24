@@ -68,7 +68,23 @@ public class TrendyBeatzDownloader implements Supplier<List<AlbumDto>> {
             return null;
         }
 
-        String albumTitle = Optional
+        String albumTitle = getTitle(document);
+        String artistName = getArtistName(document);
+        int albumYear = getYear(document);
+        String albumImage = getImagePath(document);
+
+        return StringUtils.isNoneEmpty(albumTitle, artistName)
+                ? new AlbumDto(
+                        albumTitle,
+                        new ArtistDto(artistName, StringUtils.EMPTY),
+                        albumYear,
+                        albumImage,
+                        getAlbumTracks(document))
+                : null;
+    }
+
+    private String getTitle(Document document) {
+        return Optional
                 .of(document.getElementsMatchingOwnText("Title:"))
                 .map(Elements::first)
                 .map(Element::parent)
@@ -76,14 +92,18 @@ public class TrendyBeatzDownloader implements Supplier<List<AlbumDto>> {
                 .map(Elements::first)
                 .map(Element::text)
                 .orElse(null);
+    }
 
-        String artistName = Optional
+    private String getArtistName(Document document) {
+        return Optional
                 .ofNullable(document.getElementById("artistname"))
                 .map(elt -> elt.getElementsByTag("span"))
                 .map(Elements::text)
                 .orElse(null);
+    }
 
-        int albumYear = Optional
+    private int getYear(Document document) {
+        return Optional
                 .of(document.getElementsMatchingOwnText("Year:"))
                 .map(Elements::first)
                 .map(Element::parent)
@@ -93,14 +113,15 @@ public class TrendyBeatzDownloader implements Supplier<List<AlbumDto>> {
                 .flatMap(text -> Arrays.stream(StringUtils.split(text, " ")).filter(StringUtils::isNumeric).findFirst())
                 .map(Integer::parseInt)
                 .orElse(0);
+    }
 
-        return StringUtils.isNoneEmpty(albumTitle, artistName)
-                ? new AlbumDto(
-                        albumTitle,
-                        new ArtistDto(artistName, StringUtils.EMPTY),
-                        albumYear,
-                        getAlbumTracks(document))
-                : null;
+    private String getImagePath(Document document) {
+        return Optional
+                .of(document.getElementsByAttributeValueStarting("alt", "Download"))
+                .map(elements -> elements.select("img"))
+                .map(Elements::first)
+                .map(element -> element.attr("src"))
+                .orElse(null);
     }
 
     private List<TrackDto> getAlbumTracks(Document document) {

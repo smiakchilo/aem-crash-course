@@ -14,12 +14,15 @@ public class AlbumDto {
 
     private final int year;
 
+    private final String image;
+
     private final List<TrackDto> tracks;
 
-    public AlbumDto(String title, ArtistDto artist, int year, List<TrackDto> tracks) {
+    public AlbumDto(String title, ArtistDto artist, int year, String image, List<TrackDto> tracks) {
         this.title = title;
         this.artist = artist;
         this.year = year;
+        this.image = image;
         this.tracks = tracks;
     }
 
@@ -46,6 +49,10 @@ public class AlbumDto {
 
     public int getYear() {
         return year;
+    }
+
+    public String getImage() {
+        return image;
     }
 
     public List<TrackDto> getTracks() {

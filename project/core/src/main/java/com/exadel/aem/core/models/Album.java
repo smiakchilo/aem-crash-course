@@ -2,6 +2,7 @@ package com.exadel.aem.core.models;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.exadel.aem.core.Constants;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -60,7 +61,7 @@ public class Album {
                 .map(res -> modelFactory.getModelFromWrappedRequest(request, res, Artist.class))
                 .orElse(null);
         Resource tracksResource = resource.getChild("tracks");
-        if (tracksResource != null) {
+        if (tracksResource != null && !isBriefDisplay()) {
             tracks = StreamSupport.stream(tracksResource.getChildren().spliterator(), false)
                     .map(trackResource -> trackResource.adaptTo(Track.class))
                     .collect(Collectors.toList());
@@ -87,5 +88,9 @@ public class Album {
 
     public List<Track> getTracks() {
         return tracks;
+    }
+
+    public boolean isBriefDisplay() {
+        return ArrayUtils.contains(request.getRequestPathInfo().getSelectors(), "brief");
     }
 }

@@ -8,6 +8,7 @@ import com.exadel.aem.core.dto.TrackDto;
 import com.exadel.aem.core.services.AlbumSaver;
 import com.exadel.aem.core.services.ResourceResolverHost;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.sling.api.resource.ModifiableValueMap;
 import org.apache.sling.api.resource.PersistenceException;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component(service = AlbumSaver.class)
 public class AlbumSaverImpl implements AlbumSaver {
@@ -52,8 +54,11 @@ public class AlbumSaverImpl implements AlbumSaver {
                 Resource albumResource = resolver.create(albumsFolder, albumSlug, getAlbumValueMap(album));
                 createAlbumTracks(resolver, albumResource, album);
                 createArtistResource(resolver, artistsFolder, album.getArtist());
-                resolver.commit();
+            } else {
+                ModifiableValueMap valueMap = existingAlbum.adaptTo(ModifiableValueMap.class);
+                Optional.ofNullable(valueMap).ifPresent(vm -> vm.putAll(getAlbumValueMap(album)));
             }
+            resolver.commit();
         }
     }
 
@@ -66,6 +71,9 @@ public class AlbumSaverImpl implements AlbumSaver {
         }
         if (album.getYear() > 0) {
             result.put("year", album.getYear());
+        }
+        if (album.getImage() != null) {
+            result.put("imagePath", album.getImage());
         }
         return result;
     }
