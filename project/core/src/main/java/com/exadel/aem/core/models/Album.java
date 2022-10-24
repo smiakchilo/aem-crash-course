@@ -2,6 +2,8 @@ package com.exadel.aem.core.models;
 
 import com.day.cq.commons.jcr.JcrConstants;
 import com.exadel.aem.core.Constants;
+import com.day.cq.commons.jcr.JcrConstants;
+import com.exadel.aem.core.Constants;
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
