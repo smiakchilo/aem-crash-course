@@ -1,4 +1,6 @@
-## Service configurations
+## OSGi services: configuring and use-cases
+
+### Services can controlled with OSGi configurations
 
 We have learned that OSGi services support properties that one can specify in development time. Apart from these, OSGi services support user config. 
 
@@ -6,7 +8,9 @@ The config is dynamic in nature. A developer can provide default values that wil
 
 ### Creating object config definitions
 
-To add the support for a user config to a service, you need to make it consume the config object. Usually, the config is defined with an annotation (it may look a bit weird, but merely an annotation is convenient for declaring default values).
+To add the support for a user config to a service, you need to make it consume a config object. Usually, the config is defined in the body of an annotation (it may look a bit weird, but merely an annotation is convenient for declaring default values).
+
+Here is a sample config object:
 
 ```java
 @ObjectClassDefinition(name = "MyService Config")
@@ -22,13 +26,13 @@ public @interface MyServiceConfig {
 }
 ```
 
-Such an object can be placed separately in the code base. Else, it can be a nested class of the service. 
+Such an object can be placed separately in the code base. Else, it can be a nested class of a service. 
 
 The object must be annotated with the `@ObjectClassDefinition` meta-annotation. The annotation has several optional fields that mostly affect the presentation of the config in the Felix console at `https://<aem_host>:<aem_port>/console/bindles/configMgr`;
 
-Fields of the config object must be annotated with `@AttrbibuteDefinition` and usually provide default values. Accepted value types are the same as value types available for storing data in JCR. <small>However, the `@AttributeDefinition` annotation has some properties that enrich the user experience. In particular, you can provide a set of `options` that would make it look like a select dropdown.</small>
+Fields of the config object must be annotated with `@AttrbibuteDefinition` and usually provide default values. Accepted value types are the same as value types available for storing data in JCR. <small>However, the `@AttributeDefinition` annotation has some properties that enrich the user experience. E.g., you can provide a set of `options` that would make it look like a select dropdown.</small>
 
-> You can look at a more real-world looking sample in the reference project code [here](https://github.com/smiakchilo/aem-crash-course/blob/feature/lesson-2.11/project/core/src/main/java/com/exadel/aem/core/services/impl/TrendyBeatzDownloader.java#L129)
+> You can look at a more real-world looking sample in the reference project code [here](/project/core/src/main/java/com/exadel/aem/core/services/impl/TrendyBeatzDownloader.java) (look for the `Config` declaration at the bottom).
 
 Whether the config object is created within a service or separately, it must be referenced with the `@Designate` on the service itself:
 ```java
@@ -45,7 +49,7 @@ Below is the image of config created out of sample project's `TrendyBeatzDownloa
 
 ![Service config in Felix console](img/service-config-felix.png)
 
-As you make a change and press "Save", the new config is applied to the service. If it has a `@Modified` method, it is fired. Otherwise `@Activate`-annotated method is fired. <small>Knowing this, one day, you may want to open the config and click "Save" without making any changes. Thus you effectively "restart" the service - or rather trigger some cleanup/restarting logic that could be conceived in the `@Activate`-annotated method.</small> 
+As you make a change and press "Save", the new config is applied to the service. If it has a `@Modified`-annotated method, the method is fired. Otherwise, `@Activate`-annotated method is fired. <small>Knowing this, one day, you may want to open the config and click "Save" without making any changes. Thus you effectively "restart" the service - or rather trigger some cleanup/restarting logic that could be conceived in the `@Activate`-annotated method.</small> 
 
 ### Setting config with the project code
 
@@ -57,13 +61,13 @@ This config can be specified in two ways:
 - with JCR nodes (= XML files in code) of the type `sling:OsgiConfig`;
 - with configuration files (nowadays usually in JSON format).
 
-In the sample project, [you will find both](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig).
+In the sample project, [you will find both](/project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig).
 
 Either config files or config nodes are distributed between folders. Each folder's name starts with `config`. 
 
 There is always a folder that is named just `config`. It contains the "fallback", or else "generic", config values applied to OSGi services in every instance unless a more specific config is not found.
 
-The rest of the folders manifest merely more specific configs. Their names follow the pattern `config.<runmode1>.<runmode2>...`. E.g., 
+The rest of the folders represent more specific configs. Their names follow the pattern `config.<runmode1>.<runmode2>...`. E.g., 
 * `config.author` will contain configurations that are applied on author instances (does not matter if it is a local author instance, a testing author, or a production author instance). 
 * `config.prod` will contain configurations that apply in production environments, either author or publish. 
 * `config.testing.author` is applied only in the authoring instance and only in the testing environment. 
@@ -72,9 +76,9 @@ The rest of the folders manifest merely more specific configs. Their names follo
 
 Every `config.*` folder contains nodes (or files). The name of the node/file matches the fully qualified name of the configurable service. This is not necessarily a custom service. You may configure an out-of-the-box service as well if you know what properties are manageable. 
 
-> In the sample project, we provide configuration for the custom service `TrendyBeatzDownloader` in the form of XML node ([see](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/com.exadel.aem.core.services.impl.TrendyBeatzDownloader.xml)).
+> In the sample project, we provide configuration for the custom service `TrendyBeatzDownloader` in the form of XML node ([see](/project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/com.exadel.aem.core.services.impl.TrendyBeatzDownloader.xml)).
 > 
-> Plus the configuration for the standard `LogManager` service as a JSON file ([see](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.commons.log.LogManager.factory.config~testProject.cfg.json)).
+> Plus the configuration for the standard `LogManager` service as a JSON file ([see](/project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.commons.log.LogManager.factory.config~sample-project.cfg.json)).
 
 ### Factory configurations
 
@@ -118,13 +122,15 @@ Deploying such a service will produce a noticeable effect on the Felix ConfigMgr
 
 There is now the "plus" button that allows adding another configuration (= another service instance dealing with yet another _url_). You can dump redundant service instances with the "trash" button.
 
-Factory configurations can be set up via the code as well. Look again at the [LogManager's config](../../project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.commons.log.LogManager.factory.config~testProject.cfg.json) in our sample project. The name of the file contains the `factory.config~<something>` part. By replacing `<something>` with tokens of your own, you can create multiple files, each manifesting a single service instance, that will build up to the factory config of the `LogManager` service.
+Factory configurations can be set up via the code as well. Look again at the [LogManager's config](/project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.commons.log.LogManager.factory.config~sample-project.cfg.json) in our sample project. 
+
+The name of the file contains the `factory.config~<something>` part. You can create multiple such files, differing by the word in place of `<something>`. Any meaningful word would go, just make them unique. Each file would manifest a single _LogManager_ instance. All the files together would build up to the factory config of the _LogManager_ service.
 
 There's actually more to know about services configurations. Please learn [this Adobe's document](https://experienceleague.adobe.com/docs/experience-manager-65/deploying/configuring/configuring-osgi.html#osgi-configuration-with-configuration-files) for greater detail.
 
 ---
 
-[Continue reading](part4.md)
+[Continue reading >>](part2.md)
 
 [To Contents](../../README.md)
 

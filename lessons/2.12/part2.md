@@ -9,7 +9,7 @@ _Session_, however, is rather a low-level entity. The thing that services actual
 Previously we used to speak that in a Sling model, one should neither create nor discard a _ResourceResolver_ because the Sling framework does this automatically. Things are different in services.
 
 To create an instance of _ResourceResolver_, one needs:
-* A system user with access rights to the necessary folders;
+* A system user with access rights to the necessary nodes;
 * A service mapping;
 * And a reference to _ResourceResolverFactory_.
 
@@ -31,7 +31,7 @@ Now you can find the newly created user in CRX/DE:
 
 ### Assigning rights to the service user
 
-If your service is going to read or store data, the user it will be impersonating must receive the necessary rights. There are different ways to do it. Yet the most straightforward one is to assign rights by hand.
+If your service is going to read or store data, it must act on behalf of a non-default user. This user should be given necessary rights. There are different ways to do it. The most straightforward one is to assign rights by hand.
 
 Navigate to `http://<aem_server>:<aem_port>/useradmin`. Enter the name of the service user in the top left corner field. Switch to the "Permissions" tab and check the boxes you need.
 
@@ -39,9 +39,13 @@ Navigate to `http://<aem_server>:<aem_port>/useradmin`. Enter the name of the se
 
 (We do not disclose the user/rights management in full detail. For a deeper reference read [this Adobe's document](https://experienceleague.adobe.com/docs/experience-manager-65/administering/security/security.html?lang=en).)
 
-A user is also a resource. Technically, you can pull it into the code base. Many projects (especially distributable libraries) do this to make sure that the concrete user is present on a server. Create the same-named folder in a content package (such as _ui.content_) and import the `.content.xml` file that describes the user; then add the folder to the module's `filter.xml` and also to Git.
+A user is also a resource. Technically, you can pull it into the code base. Many projects (especially distributable libraries) do this to make sure that the concrete user is always present on a server. Create the same-named folder in a content package (such as _ui.content_) and import the `.content.xml` file that describes the user; then add the folder to the module's `filter.xml` and also to Git.
 
-<u>Important</u>: you cannot preserve in the code base the read/write permissions for the current user. It is not recommended to contain such in a project at all. Instead, they create dedicated content packages (ACL packages) that are distributed across instances. You can read about ACL packaging [here](http://www.aemcq5tutorials.com/tutorials/create-system-user-in-aem/#package-system-user:~:text=How%20to%20package%20system%20user%20using%20acs%20commons%20acl%20packager).   
+You can also store in your project the read/write permissions for a folder. Have you noticed `rep:policiy` nodes here and there in CRX/DE? This is where user rights (for exactly the parent node of this `rep:policy` node) are stored. So, you can pull these nodes into the code base as well. 
+
+![A "rep:policy" node](img/rep-policy-node.png)
+
+Must be said, this approach is not fairly recommended. Instead, they create dedicated content packages ("ACL packages") that are distributed across instances. You can read about ACL packaging [here](http://www.aemcq5tutorials.com/tutorials/create-system-user-in-aem/#package-system-user:~:text=How%20to%20package%20system%20user%20using%20acs%20commons%20acl%20packager).   
 
 ### Creating a service mapping
 
@@ -53,7 +57,9 @@ Navigate to the Felix configuration console at `http://<aem_server>:<aem_port>/s
 ```
 _Bundle ID_, or else the bundle's symbolic name, can be looked up in the `MANIFEST.MF`. E.g., for the _core_ module of our sample project, it is `com.exadel.aem.sample-project.core`.
 
-The _subservice name_ is an arbitrary token that you create yourself. The word does not matter. There can be a single subservice name for all your mappings, or else different tokens for different kinds of operations like _"readService"_, _"writeService"_, etc.
+The _subservice name_ is an arbitrary token that you create yourself. The word does not matter. There can be a single subservice name for all your mappings, or else different tokens for different kinds of operations like _"service-read"_, _"service-write"_, etc.
+
+> In our sample project this token reads `core-service` ([see here](/project/ui.config/src/main/content/jcr_root/apps/sample-project/osgiconfig/config/org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sample-project-core.xml)).
 
 The _user name_ is the name of the system user you have created.
 
@@ -65,7 +71,7 @@ Now that you have saved the new mapping, you can find it in CRX/DE under the "sy
 
 ![Newly created mapping in CRX/DE](img/service-mapping-crxde.png)
 
-You will definitely want to have this mapping in your project's code base, or else the user-mapped services won't be able to work. Create a new XML file in your _ui.config_ project under the `config` folder and give it a name like `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sample-project-core.xml`. 
+You will definitely want to have this mapping in your project's code base. Create a new XML file in your _ui.config_ project under the `config` folder and give it a name like `org.apache.sling.serviceusermapping.impl.ServiceUserMapperImpl.amended~sample-project-core.xml`. 
 
 The first part of the name is the fully qualified name of the Apache Sling service we modify the config for. `.amended` is a conventional token by which we mark a config extension. The `~sample-project-core` part is just a custom word describing the bundle for which the mapping is created. 
 
@@ -83,7 +89,7 @@ The content of the file will look like
  
 ### Creating and discarding a ResourceResolver
 
-Finally, we are ready to charge the _ResourceResolverFactory_. Consider the following code:
+Finally, we are ready to use the _ResourceResolverFactory_. Consider the following code:
 ```java
 @Component
 public class MyServiceImpl implements MyService {
@@ -117,12 +123,14 @@ First, we declare a static argument map which is needed to initialize the _Resou
 
 The main activity is however going inside the `execute()` method. The new _ResourceResolver_ is created from the `resourceResolverFactory` service with the above map. The _ResourceResolver_ is then used to retrieve a common content root. Afterward, it creates a new child resource. The three arguments passed to the `create()` method are the parent resource, the name of the child, and the properties that will form the value map of the child. Finally, the _ResourceResolver_ commits the changes. Otherwise, they will not be actually stored.
 
-<u>Very important</u>: a _ResourceResolver_ created in code must be manually closed. Not closing a _ResourceResolver_ is a frequent reason for a drastic memory leak. That's why they recommend to introduce _ResourceResolver_ with _try-with-resources_.
+<u>Very important</u>: a _ResourceResolver_ created in code must be manually closed. Not closing a _ResourceResolver_ is a frequent reason for a memory leak. That's why they recommend to introduce _ResourceResolver_ with _try-with-resources_ as in the sample above.
 
-> In real-world projects, they often extract the logic of creating resource resolvers to a utility class. Another approach you may see [in our sample project](../../project/core/src/main/java/com/exadel/aem/core/services/impl/ResourceResolverHostImpl.java) where a resource resolver is served by a special OSGi component to work in auto-closeable manner.
+> In real-world projects, they often move the logic of creating resource resolvers to a utility class. Another approach you may see [in our sample project](/project/core/src/main/java/com/exadel/aem/core/services/impl/ResourceResolverHostImpl.java) where a resource resolver is served by a special OSGi component and works in the auto-closeable manner.
 
 ---
 
-[Continue reading](part5.md)
+[Continue reading >>](part3.md)
+
+[<< Previous part](part1.md)
 
 [To Contents](../../README.md)

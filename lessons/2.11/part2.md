@@ -10,14 +10,14 @@ Sounds vague, isn't it? Moreover, we can easily get confused by the very "compon
 
 Indeed, these ones are completely different creatures.
 
-That is why among AEM developers, OSGi components are rarely named this way. We use the word **Service** instead. However not as standardized, the term would go.
+That is why among AEM developers, OSGi components are rarely named this way. We use the word **Service** instead. Technically, not all OSGi components are necessarily services, but for a common usage, the term "Service" would go.
 
 ## Understanding Service. Service life cycle
 
-In AEM, a Service is a reusable instantiated Java class that comprises particular functionality.
+In AEM, a Service is a reusable instantiated Java class that covers particular functionality.
 
-* Service is not just a utility class. We have instances of _Services_, and they usually have non-static methods. Accordingly, they possess states (have local fields).
-* _Service_ is reusable. That means, we do not create a new instance every time we require the functionality of a service. Most of the time, a service is a complete singleton. In some other cases, services have several instances. But - again - they are highly reused: there are far less instances than the number of cases of their usage.
+* _Service_ is not just a utility class. We've got instances of _Services_. They usually have non-static methods and states (local fields with values).
+* _Service_ is reusable. That means, we do not create a new instance every time we require the functionality of a service. Most of the time, a service is a complete singleton. In some other cases, services have several instances. But - again - they are highly reused: there are far less instances than the number of use cases.
 * _Service_ is instantiated when appropriate. You don't need to call a constructor - the framework does it for you. What is even more important, it picks a proper moment for that.
 * _Service_ registers itself in the _Service Registry_ and is accessible via its interface.
 * Services refer to each other via respective interfaces. If you know a bit about _Spring_, it will be enough to say that services are _autowired_ (however, this operation is named differently here).
@@ -62,11 +62,13 @@ Third, you would definitely want a service if you need to refer to another servi
 
 Fourth, services are polymorphic in nature. Service is almost always referenced via its interface. There can be several implementations of the interface. The framework is responsible for picking up the most suitable one. Besides, you can instruct the framework on what implementations to use in what circumstances.
 
-This gives you vast possibilities for altering the way the code is executed (e.g., one logic for production use and a slightly different one for unit tests). You can also provide connection points for other developers to extend or modify your code. They can have another implementation for a service of yours as it fits their needs. Similarly, you can override the out-of-the-box services and thus change how AEM itself behaves.
+This gives you vast possibilities for altering the way the code is executed (e.g., one logic for production and a slightly different one for unit tests). You are able to provide connection points for other developers to extend or modify your code. They can have another implementation for a service of yours as it fits their needs. Similarly, you can override the out-of-the-box services and thus change how AEM itself behaves.
 
-Fifth, services can be set up in such a way that an instance is created no sooner than it is actually needed. This is useful if the initialization is time- and CPU-consuming (e.g., the service needs to first read some data from the network or load a file). Think of a Windows application that uses the "delayed autostart" option. On the contrary, you cannot control the timing of initialization in a utility class. It usually happens right after the class is loaded in memory.
+Fifth, services can be set up in such a way that an instance is created no sooner than it is actually needed. This is useful if the initialization is time- and CPU-consuming (e.g., the service needs to first read some data from the network or load a file). Think of a Windows application that uses the "delayed autostart" option. Same applies here. 
 
-However, there are such kinds of logic that a good old utility class would be the best solution. You may have a bunch of methods that are implemented in the functional style (process their arguments and return a value without side effects). May it be these methods refer to none of the other services. You are not going to provide alternations of these methods, nor do you plan a specific rendition for tests. In this case, there's no need to wrap them in OSGi service.
+On the contrary, you cannot control the time of initialization in a utility class. It usually happens right after the class is loaded in memory.
+
+However, there are such kinds of logic that a good old utility class would be the best solution. You may have a bunch of methods that are implemented in the functional style (handle arguments and return a value without side effects). May it be these methods refer to none of the other services. You are not going to provide alternations of these methods. In this case, there's no need to wrap them in OSGi service.
 </details>
 
 #### Class composition of a service
@@ -95,8 +97,6 @@ public class ModelProcessorImpl implements ModelProcessor {
 The `@Component`-s `service` property is optional. It reiterates what interface the current class implements.
 
 Interestingly, the interface must not necessarily be a custom one. A core interface (such as `Runnable`, `Callable`, or even a functional interface, e.g., `Function<Foo, Bar>`) would do.
-
-<small>Moreover, with `service = ...` you can declare _the current class_ as an "interface" for itself! This is a bit of a hacky solution. But it will work if you would not support a separate interface and/or absolutely don't want another implementation to be introduced by someone else.</small>
 
 By an old gold tradition, the implementations of services are named `...Impl` and are usually placed in a subpackage by the name of `.impl`. (This tradition is not strictly obeyed, though).
 
@@ -127,17 +127,17 @@ public class MyServiceImpl implements Runnable {
 
     @Activate
     private void doActivate() { // The name of the method can be any
-        LOG.info("This method implements when the service first started. Happens at least once upon the start of the containing bundle");
+        LOG.info("This method is called when the service first started. Happens at least once upon the start of the containing bundle");
     }
 
     @Deactivate
     private void doDeactivate() { // The name of the method can be any
-        LOG.info("This method implements when the service is shut down. Happens at least once when the containing bundle is stopped");
+        LOG.info("This method is called when the service is shut down. Happens at least once when the containing bundle is stopped");
     }
 
     @Modified
     private void doModified() { // The name of the method can be any
-        LOG.info("Implements usually at the time that the configuration of the service changed (e.g. when a user made changes to the /system/console/configMgr console");
+        LOG.info("Called at the time that the configuration of the service changed (e.g. when a user made changes to the /system/console/configMgr console");
     }
 }
 ```
@@ -181,7 +181,7 @@ or elsewhere on the Internet.
 
 #### Control the timing of the service's start
 
-Take heed to the `@Component`-s `immediate` property. It states that the instance of service will be created as soon as the OSGi framework takes control of the current bundle. As we said, this is not necessary. Skip `immediate = true`, and the service will be instantiated only after an attempt to call it elsewhere in the code. 
+Take a look at the `@Component`-s `immediate` property. It states that the instance of service will be created as soon as the OSGi framework takes control of the current bundle. As we said, this is not necessary. Skip `immediate = true`, and the service will be instantiated only after someone calls it elsewhere in the code. 
 
 <u>Important</u>: If you created a bunch of services that have references to each other, at least one should be `immediate = true`, or else they will just be "sitting there waiting for each other", and none will start.
 
@@ -276,7 +276,9 @@ public class MyServiceImpl implements MyService {
 }
 ```
 
-Of the contenders, the service with the greatest ranking is elected. If there are several services with equal rankings (including those with the default/non-specified ranking), the one with the lowest _PID_ is selected. Lower _PID_-s are usual for the out-of-the-box services that initialize earlier. Thus, the standard implementations prevail. They do unless you impose an "override" that would have a non-default ranking set by you.
+If there are several implementations to choose from, one with the greatest ranking is elected. If several services share the same ranking (or just have the default/non-specified ranking), the one with the lowest _ID_ is selected. 
+
+Lower _ID_-s are usual for the out-of-the-box services that initialize earlier. Thus, in OSGi, standard implementations prevail unless you introduce an "overriding" one that has a non-default ranking that you set yourself.
 
 <b>Case 2: Selecting an implementation based on a filter</b>
 
@@ -323,19 +325,19 @@ public class Consumer implements ConsumerService {
 }
 ```
 
-You can provide the `target` parameter to `@Reference` in which you specify a query in the format known as _"LDAP search filter"_. Basically, this is nothing more than a bracketed equality that names the key and the desired value, like `target = "(param=Foo)"`. Apart from strings, you can play around with statements comparing numeric and boolean values.
+You can provide the `target` parameter to `@Reference` in which you specify a query in the format known as _"LDAP search filter"_. Basically, this is nothing more than a bracketed equality that names the key and value, like `target = "(param=Foo)"`. Apart from strings, you can play around with statements comparing numeric and boolean values.
 
-The "terminal" case of such statement is one that requires the precise name of implementation class:
+The "ultimate" case of such statement is one that requires the precise name of implementation class:
 ```
 @Reference(target = "component.name=com.exadel.aem.core.services.impl.AlbumRetrieverImpl")
 ```
 
-You see, it somehow breaks the very idea of referencing interfaces rather than classes. Yet it is still used in some real-world scenarios.
+You see, it somehow breaks the very idea of referencing interfaces rather than implementations. Yet it is still used in some real-world scenarios.
 </details>
 
 #### Referencing a collection of services
 
-Sometimes you may want to link all the available implementations at once. A use case: the implementations are kind of "suppliers" of some data, and you want to retrieve data from all sources at once.
+Sometimes you may want to link all the available implementations at once. A use case: the implementations are kind of "suppliers" of some data, and you want to retrieve data from all suppliers at once.
 
 In this situation, you inject not a single object but a collection of objects and provide the `cardinality` value. Additionally, you may need to specify the _GREEDY_ policy option, which means that you expect the current service to "grab and hold" as many references as possible. 
 ```
@@ -343,19 +345,18 @@ In this situation, you inject not a single object but a collection of objects an
 private List<MyService> myServices;
 ```
 
-> Find out the use of such an approach in the sample project's [AlbumRetrieverImpl](../../project/core/src/main/java/com/exadel/aem/core/services/impl/AlbumRetrieverImpl.java).
+> Find out the use of such an approach in the sample project's [AlbumRetrieverImpl](/project/core/src/main/java/com/exadel/aem/core/services/impl/AlbumRetrieverImpl.java).
 
 <details>
 <summary><em style="color:#aaa; font-weight: bold">New references can be added even after the current service is started (click to expand)</em></summary>
 
-Injecting a collection of services has an interesting nuance. Implementations of the current interface may reside in different bundles. And the bundles, you know, can be installed and uninstalled independently of each other at any time. Therefore, we can face a situation when the current service having the `myServices` field has been working for a while already, but a new implementation of `MyService` has just arrived. Will it be added to the `myServices` list?
+Injecting a collection of services has an interesting nuance. Implementations of the current interface may belong to different bundles. And the bundles, you know, can be installed and uninstalled independently of each other at any time. Therefore, we can face a situation when the current service having the `myServices` field has been working for a while already, but a new implementation of `MyService` has just arrived. Will it be added to the `myServices` list?
 
-Depends on the two properties you can specify for the `@Reference` annotation: `referencePolicy`
-and `referencePolicyOption`.
+Depends on the two properties you can specify for the `@Reference` annotation: `referencePolicy` and `referencePolicyOption`.
 
-Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new service implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (a bundle is unloaded).
+Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (the bundle in belongs to is unloaded).
 
-Above all, setting `referencePolicy` to _DYNAMIC_ allows event-driven reference management because the _bind_ and _unbind_ methods are honored. See the next chapter for detail.
+Above all, setting `referencePolicy` to _DYNAMIC_ allows event-driven reference management: it honors the _bind_ and _unbind_ methods. See the next chapter for detail.
 </details> 
 
 #### Event-driven references. Binding and unbinding
@@ -416,7 +417,7 @@ public interface Downloader {
 
 In this code we want to call the `download()` method on every downloader (= service instance implementing the `Downloader` interface). We also wish that the downloaders were processed in the particular order: from one with the highest ranking to one with the lowest.
 
-For this sake, we do not plainly inject `Downloader` instances. Instead, we save them into a map. Since the reference policy is _DYNAMIC_ and referenced services may come and go as sibling bundles install or uninstall, we don't know the exact set of downloaders before we actually call the `runDownloaders()` method. Within this method, we first sort the downloaders by their ranking, descending order, and only then call the method on each of them.  
+For this sake, we do not plainly inject `Downloader` instances. Instead, we save them into a map. Since the reference policy is _DYNAMIC_ and referenced services may come and go as bundles install or uninstall, we don't know the exact set of downloaders before we actually call the `runDownloaders()` method. Within this method, we first sort the downloaders by their ranking, descending, and only then call the method on each of them.  
 
 #### Referencing a service in Sling Models and HTL
 
@@ -460,8 +461,10 @@ Interestingly, a service can be injected directly into the HTL markup:
 ```
 Just remember that an HTL script in normal situations can only call zero-argument methods, so your service must provide one.
 
+These were the basics of OSGi application structure. Knowing than bundles are and how we define an OSGi component (or service), it's time to take a thorough look 
+ at real-world applications of a service. Let us learn how a service is set up and controlled and what it has to do with the content repository. This is what the [next lesson](../2.12/part1.md) is about.
 ---
 
-[Continue reading](part3.md)
+[<< Previous part](part1.md)
 
 [To Contents](../../README.md)
