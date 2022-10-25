@@ -36,13 +36,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.exadel.aem</groupId>
-            <artifactId>sample-project.ui.apps.structure</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
 </project>
