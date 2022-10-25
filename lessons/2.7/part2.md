@@ -11,7 +11,7 @@ There’s not a "true" object-relational mapping library in AEM. No likes of Liq
 
 To understand this API, let us review how the content repository is organized.
 <details>
-<summary><em style="color:#aaa; font-weight: bold">Content repository: an overview (expand to see)</em></summary>
+<summary><em style="color:#aaa; font-weight: bold">Content repository: an overview (click to expand)</em></summary>
 
 The content repository can be presented within three tiers.
 
@@ -41,7 +41,7 @@ Speaking of resources, there are some particular species that are required quite
 For example, when a user sends a request to AEM with a path like _/content/home.html_, they effectively request a resource identified by this path. This is not "any" resource; this is exactly a _page resource_. The notion of Page was not present in Sling. It was added by AEM itself. 
 
 Similarly, when a server checks access rights for a user, it looks for the user data in JCR and finds a resource. That would be a _user resource_. Also, there are _workflow resources_, _job resources_, _query resources_ etc. They all manifest the third level – **Application tier**. On this level, there are resources and utility classes tailored for some particular (and relatively narrow) business tasks.
-![Tiers diagram](img.png)
+![Tiers diagram](img/tiers-diagram.png)
 </details>
 
 ### Adaptation, again
@@ -63,16 +63,16 @@ flowchart TD
 
 In pure Java world we would do this like `AbstractFoo abstractFoo = (AbstractFoo) foo` (Widening type cast). Or just vice versa: `Foo foo = (Foo) abstractFoo` (Narrowing type cast. Beware: deemed a bad practice, and is exception prone!). One great limitation here is that `Foo` must be an extension, or else an implementation of `AbstractFoo`.
 
-Apache Sling makes use of the _adapter pattern_ to bypass this limitation. Many and more entities can be "cast" to each other via calls of the `adaptTo(Class<?> targetClass)` method. They can but must not belong to the same inheritance tree, and there are no "narrowing/widening" relations. All are considered "equal in rights". You can write a custom adaptation or an adapter of your own. If an adapter can’t be found, there isn't exception but just `null`.
+Apache Sling makes use of the _adapter pattern_ to bypass this limitation. Many and more entities can be "cast" to each other via calls of the `adaptTo(Class<?> targetClass)` method. They can but must not belong to the same inheritance tree, and there are no "narrowing/widening" relations. All are considered "equal in rights". You can write a custom adaptation or an adapter of your own. If an adapter can’t be found, there isn't an exception but just `null`.
 
 <details>
 <summary><em style="color:#aaa; font-weight: bold">Standard adaptations (click to expand)</em></summary>
 
-Right out of the box you can adapt a _Resource_ to a _Node_, or to a _ValueMap_, or to a _Page_, or else to an _InputStream_ to read the binary file data from the resource. Also, you can adapt a _Page_ to a _Resource_ or a _Node_. You are able to retrieve a user session object from a _PageManager_ via adaptation; get a _QueryBuilder_, and so much more.
+Right out of the box, you can adapt a _Resource_ to a _Node_, or to a _ValueMap_, or to a _Page_, or else to an _InputStream_ to read the binary file data from the resource. Also, you can adapt a _Page_ to a _Resource_ or a _Node_. You are able to retrieve a user session object from a _PageManager_ via adaptation, get a _QueryBuilder_, and so much more.
 
-Besides, you are usually able to adapt a _Resource_ or a _SlingHttpServletRequest_ to a custom Sling model, That’s what `@Model(adaptables = …`) is for!
+Besides, you are usually able to adapt a _Resource_ or a _SlingHttpServletRequest_ to a custom Sling model. That’s what `@Model(adaptables = …`) is for!
 
-Here is just a [generic whitepaper](https://experienceleague.adobe.com/docs/experience-manager-64/developing/platform/sling-adapters.html?lang=en) listing some of the vectors of adaptation that are supported in an AEM project out of the box. We will use some of them in our demonstrations later on.
+Here is just a [generic whitepaper](https://experienceleague.adobe.com/docs/experience-manager-65/developing/platform/sling-adapters.html?lang=en) listing some of the vectors of adaptation that are supported in an AEM project out of the box. We will use some of them in our demonstrations later on.
 </details>
 
 ### Retrieving a resource by its path
@@ -100,7 +100,7 @@ public class MyModel {
 }
 ```
 
-Most commonly used methods of ResourceResolver are `getResource()` and `resolve()`. Both can accept the absolute path of a resource and produce the same result. There are however some differences. 
+Most commonly used methods of ResourceResolver are `getResource()` and `resolve()`. Both can accept the absolute path of a resource and produce the same result. There are, however, some differences. 
 
 The `getResource()` method has a rendition that accepts a base resource and a relative path from it. If there isn’t a resource at a given path, it returns `null`. 
 
@@ -129,7 +129,7 @@ public class MyModel {
         Resource nonExisting2 = resourceResolver.resolve("/non/existing");
         assert nonExisting2 != null;
         
-        // both .getResource() and .resolve() can accept a "base" entity (a resource
+        // Both .getResource() and .resolve() can accept a "base" entity (a resource
         // and a request respectively) and navigate a relative path
         Resource existingChild1 = resourceResolver.getResource(currentResource, "child");
         Resource existingChild2 = resourceResolver.resolve(request, "child");
@@ -137,6 +137,7 @@ public class MyModel {
     }
 }
 ```
+ If you are not going to exploit path mappings and such, prefer `getResource()` over `resolve()` because it is known to work faster. 
 
 ### Modifying resources
 
@@ -195,14 +196,14 @@ Commit is also used when you modify a resource. Remember that modifying just mea
 Resource resource = getResourceFromElsewhere();
 ModifiableValueMap valueMap = resource.adaptTo(ModifiableValueMap.class);
 valueMap.put("jcr:title", "New title");
-resource.getResourceResolver.commit();
+resource.getResourceResolver().commit();
 ```
 
 Now you wonder what types of values can be put into this kind of map. No surprise, these are data types supported by JCR. You can use all primitives and their boxed variants (they will all be coerced to `long`, `double`, and `boolean`), a `String`, and a `Calendar` or `Date` for the date value.
 
 Remember we said that you can retrieve a resource resolver from an existing resource? We use this option here to get one and execute the commit method right away.
 ```
-resource.getResourceResolver.commit();
+resource.getResourceResolver().commit();
 ```
 
 ### PageManager object
@@ -222,7 +223,7 @@ if (resolver != null) {
     resolver.commit();
 }
 ```
-More info oin PageManager is [here](https://developer.adobe.com/experience-manager/reference-materials/6-5/javadoc/index.html?com/day/cq/wcm/api/PageManager.html).
+More info on PageManager is [here](https://developer.adobe.com/experience-manager/reference-materials/6-5/javadoc/index.html?com/day/cq/wcm/api/PageManager.html).
 
 ### Session object
 
@@ -242,11 +243,9 @@ Now that you know a lot about manipulating resources, we will visit a question t
 
 There are occasions when you cannot rely on the provided Sling instantiation/injection mechanism and need to craft a Sling model in your own code.
 
-Such could happen, e.g., when you possess a `@Model(adaptables = Resource.class)` but this time want to adapt it from a `SlingHttpServletRequest`, or just vice versa. You consent that not all the fields will be properly injected. But you actually need just a couple of them, and you are OK with the remaining `null`-s.
+Such could happen, e.g., when you’ve got at hand a _SlingHttpServletRequest_ that encapsulates a resource. You wish that the effective model used the current request but accounted for some foreign resource (and not the one from the current request) when injecting values.
 
-Another common case is when you’ve got at hand a _SlingHttpServletRequest_ that encapsulates a resource. You wish that the effective model used the current request but accounted for some foreign resource (and not the one from the current request) when injecting values.
-
-For such cases, there is the ModelFactory service that we can inject in our Sling model.
+For such a case, there is the _ModelFactory_ service that we can inject in our Sling model.
 Look at the following resource structure:
 ```
 /
@@ -316,9 +315,11 @@ If we tried to do this like `secondResource.adaptTo(MySecondModel.class)`, we wo
 
 Eventually, we receive an instance of `MySecondModel` that exposes a value map property of the resource at path `/content/first/second` while reporting the path of the original request - `/content/first`.
 
-> Want a more real-world example? See how we create a list of secondary Sling models ("Tracks") from children of a root resource rendered by the "Album" component [in our sample project](/project/core/src/main/java/com/exadel/aem/core/models/Album.java).  
+> Want a real-world example? See how we create a list of secondary Sling models ("Tracks") from children of a root resource rendered by the "Album" component [in our sample project](/project/core/src/main/java/com/exadel/aem/core/models/Album.java). 
+ 
+Apart from this, _ModelFactory_ can be used for solving advanced model usage cases. E.g., you can find out if the given object can be adapted to a particular model, or else create a model instance for an adaptable without specifying a model class, etc. You can read more on _ModelFactory_ [here](https://sling.apache.org/apidocs/sling11/org/apache/sling/models/factory/ModelFactory.html).
 
-By using such techniques as those described above, we can leverage versatile backend logic for our AEM components.
+By using such techniques as those described above, we can leverage rich and flexible backend logic for our AEM components.
 
 ---
 

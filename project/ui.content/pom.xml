@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -11,7 +14,7 @@
 
     <artifactId>sample-project.ui.content</artifactId>
     <packaging>content-package</packaging>
-    <name>Sample AEM Project - UI Content</name>
+    <name>Sample AEM Project - UI content</name>
     <description>UI content package for Sample AEM Project</description>
 
     <build>
@@ -20,15 +23,14 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>
+                    </properties>
                     <group>com.exadel.aem</group>
                     <name>sample-project.ui.content</name>
                     <packageType>content</packageType>
                     <accessControlHandling>merge</accessControlHandling>
                     <validatorsSettings>
-                        <!-- disable nodetype validation as workaround until JCRVLT-463 got fixed -->
-                        <jackrabbit-nodetypes>
-                            <isDisabled>true</isDisabled>
-                        </jackrabbit-nodetypes>
                         <jackrabbit-filter>
                             <options>
                                 <validRoots>/conf,/content,/content/experience-fragments,/content/dam</validRoots>
@@ -71,7 +73,6 @@
         <dependency>
             <groupId>com.adobe.aem</groupId>
             <artifactId>uber-jar</artifactId>
-            <version>6.5.12</version>
         </dependency>
     </dependencies>
 </project>

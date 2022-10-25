@@ -12,7 +12,7 @@
             layout="responsiveGrid">
             <experiencefragment-header
                 jcr:primaryType="nt:unstructured"
-                sling:resourceType="sample-project/components/experiencefragment"
+                sling:resourceType="sample-project/components/experienceFragment"
                 fragmentVariationPath="/content/experience-fragments/sample-project/us/en/site/header/master"/>
             <container
                 jcr:primaryType="nt:unstructured"
@@ -30,7 +30,7 @@
             </container>
             <experiencefragment-footer
                 jcr:primaryType="nt:unstructured"
-                sling:resourceType="sample-project/components/experiencefragment"
+                sling:resourceType="sample-project/components/experienceFragment"
                 fragmentVariationPath="/content/experience-fragments/sample-project/us/en/site/footer/master"/>
         </root>
         <cq:responsive jcr:primaryType="nt:unstructured">
