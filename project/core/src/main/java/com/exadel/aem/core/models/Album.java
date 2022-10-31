@@ -1,5 +1,10 @@
 package com.exadel.aem.core.models;
 
+import com.day.cq.commons.jcr.JcrConstants;
+import com.exadel.aem.core.Constants;
+import com.day.cq.commons.jcr.JcrConstants;
+import com.exadel.aem.core.Constants;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.api.resource.ResourceResolver;
@@ -36,7 +41,7 @@ public class Album {
     @OSGiService
     private ModelFactory modelFactory;
 
-    @ValueMapValue(name = "jcr:title")
+    @ValueMapValue(name = JcrConstants.JCR_TITLE)
     private String title;
 
     @ValueMapValue
@@ -54,11 +59,11 @@ public class Album {
     @PostConstruct
     private void init() {
         artist = Optional.ofNullable(artistId)
-                .map(id -> resolver.getResource("/content/sample-project/us/en/artists/" + id))
+                .map(id -> resolver.getResource(Constants.ARTISTS_FOLDER + "/" + id + Constants.ARTIST_RESOURCE_PATH))
                 .map(res -> modelFactory.getModelFromWrappedRequest(request, res, Artist.class))
                 .orElse(null);
         Resource tracksResource = resource.getChild("tracks");
-        if (tracksResource != null) {
+        if (tracksResource != null && !isBriefDisplay()) {
             tracks = StreamSupport.stream(tracksResource.getChildren().spliterator(), false)
                     .map(trackResource -> trackResource.adaptTo(Track.class))
                     .collect(Collectors.toList());
@@ -85,5 +90,9 @@ public class Album {
 
     public List<Track> getTracks() {
         return tracks;
+    }
+
+    public boolean isBriefDisplay() {
+        return ArrayUtils.contains(request.getRequestPathInfo().getSelectors(), "brief");
     }
 }

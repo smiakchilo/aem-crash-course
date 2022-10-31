@@ -23,12 +23,19 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>filevault-package-maven-plugin</artifactId>
                 <configuration>
-                    <properties>
-                        <cloudManagerTarget>none</cloudManagerTarget>
-                    </properties>
                     <group>com.exadel.aem</group>
                     <name>sample-project.ui.apps</name>
                     <packageType>application</packageType>
+                    <properties>
+                        <cloudManagerTarget>none</cloudManagerTarget>
+                    </properties>
+                    <validatorsSettings>
+                        <jackrabbit-filter>
+                            <options>
+                                <validRoots>/apps/sample-project</validRoots>
+                            </options>
+                        </jackrabbit-filter>
+                    </validatorsSettings>
                     <dependencies>
                         <dependency>
                             <groupId>com.adobe.cq</groupId>

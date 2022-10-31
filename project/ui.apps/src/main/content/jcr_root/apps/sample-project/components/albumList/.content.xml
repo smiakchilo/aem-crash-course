@@ -3,6 +3,7 @@
         xmlns:cq="http://www.day.com/jcr/cq/1.0"
         xmlns:jcr="http://www.jcp.org/jcr/1.0"
         jcr:primaryType="cq:Component"
-        jcr:title="Album"
-        jcr:description="Album Component"
+        jcr:title="Album List"
+        jcr:description="Album List Component"
+        cq:isContainer="{Boolean}true"
         componentGroup="Sample AEM Project - Content"/>

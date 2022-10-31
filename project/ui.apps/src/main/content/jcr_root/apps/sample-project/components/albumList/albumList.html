@@ -1,0 +1,9 @@
+<sly data-sly-use.albumList="com.exadel.aem.core.models.AlbumList"></sly>
+<div class="cmp-container">
+    <sly data-sly-repeat.item="${albumList.items}"
+         data-sly-resource="${item @
+        addSelectors='brief',
+        decoration=true,
+        decorationTagName='div',
+        cssClassName='album'}"></sly>
+</div>

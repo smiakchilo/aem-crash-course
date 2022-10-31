@@ -1,5 +1,7 @@
 package com.exadel.aem.core.models;
 
+import com.day.cq.commons.jcr.JcrConstants;
+import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.resource.Resource;
 import org.apache.sling.models.annotations.DefaultInjectionStrategy;
 import org.apache.sling.models.annotations.Model;
@@ -7,7 +9,7 @@ import org.apache.sling.models.annotations.injectorspecific.Self;
 import org.apache.sling.models.annotations.injectorspecific.ValueMapValue;
 
 @Model(
-        adaptables = Resource.class,
+        adaptables = SlingHttpServletRequest.class,
         defaultInjectionStrategy = DefaultInjectionStrategy.OPTIONAL
 )
 public class Artist {
@@ -15,10 +17,10 @@ public class Artist {
     @Self
     private Resource resource;
 
-    @ValueMapValue(name = "jcr:title")
+    @ValueMapValue(name = JcrConstants.JCR_TITLE)
     private String title;
 
-    @ValueMapValue(name = "jcr:description")
+    @ValueMapValue(name = JcrConstants.JCR_DESCRIPTION)
     private String description;
 
     @ValueMapValue

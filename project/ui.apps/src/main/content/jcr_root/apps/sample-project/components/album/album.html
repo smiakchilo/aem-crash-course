@@ -1,11 +1,11 @@
 <sly data-sly-use.album="com.exadel.aem.core.models.Album"></sly>
 <img src="${album.imagePath}" alt="${album.title}"/>
-<title>${album.title}</title>
+<div data-sly-test="${album.briefDisplay}" class="album-title">${album.title}</div>
 <div class="album-artist">
     <a href="${album.artist.path @ context='uri'}" title="${album.artist.title}">${album.artist.title}</a>
 </div>
 <div class="album-date">${album.year}</div>
-<div class="album-tracks">
+<div class="album-tracks" data-sly-test="${!album.briefDisplay}">
     <div data-sly-repeat.track="${album.tracks}" class="album-track">
         <span class="track-number">${trackList.count}</span>
         <span class="track-title">${track.title}</span>
