@@ -16,7 +16,7 @@ How do you treat this?
 5. suffix - If the request URL contains a slash character after the resource path and optional selectors and extension, the path starting with the slash up to the end of the request URL is the suffix path. Otherwise, the suffix path is empty. Note, that after the resource path at least a dot must be in the URL to let Sling detect the suffix.
 6. fragment.
 
-   http://www.example.com/products/product1.one.two.html/a/b?a=b
+http://www.example.com/products/product1.one.two.html/a/b?a=b
 | protocol | host | resource path | selectors | extension | suffix | params |
 | --- | --- | --- | --- | --- | --- | --- |
 | http:// | www.example.com | products/product1 | one.two | html | a/b | a=b |
@@ -40,6 +40,7 @@ For the resource /apps/wknd/components/structure/page  Sling will look for the b
 2. html.html
 3. If none of the files mentioned above is present in your component, and it has a sling:resourceSuperType, then SLING will go and take a look at that component in a similar manner to find if any script can be resolved to render content.
 4. GET.html
+
 In our example the best match is sling:resourceSuperType. So we go to /apps/core/wcm/components/page/v2/page.
 ![img.png](img/we-retail-page-super.png)
 In /apps/core/wcm/components/page/v2/page the best match for us is page.html.
