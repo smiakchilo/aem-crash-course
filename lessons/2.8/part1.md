@@ -259,7 +259,7 @@ Output: 01 December '18 12:00 AM; day in year: 335; week in year: 49
 
 The following characters are supported in pattern:
 - 0 - digit, shows as 0 if absent
-- # - digit, does not show if absent
+- \# - digit, does not show if absent
 - . - decimal separator
 - - minus sign
 - , - grouping separator
