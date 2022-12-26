@@ -18,10 +18,10 @@ HTL comprises:
 The expression syntax includes literals, variables, operators, and options.
 Literals can be Boolean, Integers (including exponentiation, floating point numbers are not supported), Strings and Arrays.
 Variables, much like in Java or JS,  can represent a primitive value or an object with properties. There are two ways to access object properties, with a dot notation, or with a bracket notation:
-
+```html
 ${currentPage.title}
-
 ${currentPage['title']} or ${currentPage["title"]}
+```
 
 So called options can be added to every expression.
 Everything after the @ is an option:
