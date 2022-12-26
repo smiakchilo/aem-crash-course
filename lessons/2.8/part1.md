@@ -25,8 +25,9 @@ ${currentPage['title']} or ${currentPage["title"]}
 
 So called options can be added to every expression.
 Everything after the @ is an option:
-
+```html
 ${myVar @ optOne}
+```
 
 Each option can be used in several ways:
 1. Option can work as a functions argument - it accepts the expression as an argument and processes it.
