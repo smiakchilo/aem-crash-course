@@ -13,7 +13,7 @@ HTL uses an expression language to insert pieces of content into the rendered ma
 
 HTL comprises:
 1. Expression Language. Used to insert pieces of content into the rendered markup. Sightly code is written using dollar sign ‘$’ and braces ‘{}’.${currentPage.title} where currentPage is a global object and title is a property.
-2. Block statements. You can add a special data-attribute that starts with “data-sly-” and contains an HTL statement is quotes to any HTML element. The content in quotes can be either an HTL expression ( ${...} ) or a plain string, usually referring to an URL or a page name. For example, <div data-sly-include=”main.html”/> is an HTL block expression that is bound to an ordinary HTML tag (<div>) and contains the definitive data-sly-... attribute. In this very case, the attribute is data-sly-include. It instructs sightly to insert a portion of markup stored in main.html into the current <div> tag.
+2. Block statements. You can add a special data-attribute that starts with “data-sly-” and contains an HTL statement is quotes to any HTML element. The content in quotes can be either an HTL expression ( ${...} ) or a plain string, usually referring to an URL or a page name. For example, ```html<div data-sly-include=”main.html”/>``` is an HTL block expression that is bound to an ordinary HTML tag (```html<div>```) and contains the definitive data-sly-... attribute. In this very case, the attribute is data-sly-include. It instructs sightly to insert a portion of markup stored in main.html into the current ```html<div>``` tag.
 
 The expression syntax includes literals, variables, operators, and options.
 Literals can be Boolean, Integers (including exponentiation, floating point numbers are not supported), Strings and Arrays.
