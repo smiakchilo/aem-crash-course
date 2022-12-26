@@ -18,11 +18,16 @@ HTL comprises:
 The expression syntax includes literals, variables, operators, and options.
 Literals can be Boolean, Integers (including exponentiation, floating point numbers are not supported), Strings and Arrays.
 Variables, much like in Java or JS,  can represent a primitive value or an object with properties. There are two ways to access object properties, with a dot notation, or with a bracket notation:
+
 ${currentPage.title}
+
 ${currentPage['title']} or ${currentPage["title"]}
+
 So called options can be added to every expression.
 Everything after the @ is an option:
+
 ${myVar @ optOne}
+
 Each option can be used in several ways:
 1. Option can work as a functions argument - it accepts the expression as an argument and processes it.
 2. When the expression is located in a data-sly-* statement, they allow providing instructions or parameters to that statement.
@@ -239,21 +244,26 @@ This option can be used to format dates and numbers, and also interpolate string
 3. type of format option object, when the type is a Date or a Number
 4. default, fallback to string formatting
 
-
 ### Strings
 
-Example: ${'Asset {0}' @ format=properties.assetName}
-Output: Asset Night Sky
-Example: ${'Asset {0} out of {1}' @ format=[properties.current, properties.total]}
-Output: Asset 3 out of 5
+```html
+<div>${'Asset {0}' @ format=properties.assetName}</div>
+<!--/* Asset Night Sky */-->
+
+<div>${'Asset {0} out of {1}' @ format=[properties.current, properties.total]}</div>
+<!--/* Asset 3 out of 5 */-->
+```
 
 ### Dates
 
-Examples for date 1918-12-01 00:00:00Z:
-Example: ${'yyyy-MM-dd HH:mm:ss.SSSXXX' @ format=obj.date, timezone='UTC'}
-Output: 1918-12-01 00:00:00.000Z
-Example: ${'dd MMMM \'\'yy hh:mm a; \'day in year\': D; \'week in year\': w' @ format=obj.date, timezone='UTC'}
-Output: 01 December '18 12:00 AM; day in year: 335; week in year: 49
+Examples for date 1918-12-01 00:00:00Z
+```html
+<div>${'yyyy-MM-dd HH:mm:ss.SSSXXX' @ format=obj.date, timezone='UTC'}</div>
+<!--/* 1918-12-01 00:00:00.000Z */-->
+
+<div>${'dd MMMM \'\'yy hh:mm a; \'day in year\': D; \'week in year\': w' @ format=obj.date, timezone='UTC'}</div>
+<!--/* 01 December '18 12:00 AM; day in year: 335; week in year: 49 */-->
+```
 
 ### Numbers
 
@@ -269,10 +279,13 @@ The following characters are supported in pattern:
 
 Characters can be escaped in prefix or suffix using single quotes. Single quotes are escaped as two in a row.
 Examples for number -3.14:
-Example: ${'#.###;-#.###' @ format=obj.number}
-Output: -3.14
-Example: ${'#.000E00' @ format=obj.number}
-Output: -.314E01
+```html
+<div>${'#.###;-#.###' @ format=obj.number}</div>
+<!--/* -3.14 */-->
+
+<div>${'#.000E00' @ format=obj.number}</div>
+<!--/* -.314E01 */-->
+```
 
 ## 2.8.6 Rendering nested resource
 
@@ -339,42 +352,67 @@ When some parameters are missing in a template call, that parameter would be ini
 
 The URI manipulation options work for expressions that are outside of block statements as well as for data-sly-text and data-sly-attribute. URI manipulation can be performed by adding any of the following options to an expression:
 - **scheme** - allows adding or removing the scheme part of the URI.
-Example: ${‘example.com/path/page.html’ @ scheme=’http’}
-Output: http://example.com/path/page.html
+```html
+<div>${‘example.com/path/page.html’ @ scheme=’http’}</div>
+<!--/* http://example.com/path/page.html */-->
+```
 - **domain** - allows adding or replacing the host and port (domain) for a URI.
-Example: ${‘http://www.example.com/path/page.html’ @ domain=’www.example.org’}
-Output: http://www.example.org/path/page.html
+```html
+<div>${‘http://www.example.com/path/page.html’ @ domain=’www.example.org’}</div>
+<!--/* http://www.example.org/path/page.html */-->
+```
 - **path** - modifies the path that identifies the resource.
-Example: ${‘http://example.com/this/one.selector.html/ suffix?key=value#fragment’ @ path=’that/two’}
-Output: http://example.com/that/two.selector.html/ suffix?key=value#fragment
+```html
+<div>${‘http://example.com/this/one.selector.html/ suffix?key=value#fragment’ @ path=’that/two’}</div>
+<!--/* http://example.com/that/two.selector.html/ suffix?key=value#fragment */-->
+```
 - **prependPath** - prepends its content to the path that identifies a resource.
-Example: ${'path' @ prependPath='..'}
-Output: <!-- outputs: ../path -->
+```html
+<div>${'path' @ prependPath='..'}</div>
+<!--/* ../path */-->
+```
 - **appendPath** - appends its content to the path that identifies a resource.
-Example: ${'path' @ appendPath='..'}
-Output: <!-- outputs: ../path -->
+```html
+<div>${'path' @ appendPath='/add'}</div>
+<!--/* path/add */-->
+```
 - **selectors** - modifies or removes the selectors from a URI.
-Example: ${'path/page.woo.foo.html' @ selectors='foo.bar'}
-Output: <!-- outputs: path/page.foo.bar.html -->
+```html
+<div>${'path/page.woo.foo.html' @ selectors='foo.bar'}</div>
+<!--/* path/page.foo.bar.html */-->
+```
 - **addSelectors** - adds the provided selectors (selectors string or selectors array) to the URI.
-Example: ${'path/page.woo.foo.html' @ addSelectors='foo.bar'}
-Output: <!-- outputs: path/page.woo.foo.foo.bar.html -->
+```html
+<div>${'path/page.woo.foo.html' @ addSelectors='foo.bar'}</div>
+<!--/* path/page.woo.foo.foo.bar.html */-->
+```
 - **removeSelectors** - removes the provided selectors (selectors string or selectors array) from the URI.
-Example: ${'path/page.woo.foo.html' @ removeSelectors='foo.bar'}
-Output: <!-- outputs: path/page.woo.html -->
+```html
+<div>${'path/page.woo.foo.html' @ removeSelectors='foo.bar'}</div>
+<!--/* path/page.woo.html */-->
+```
 - **extension** - adds, modifies, or removes the extension from a URI.
-Example: ${‘path/page.json’ @ extension=’html’}
-Output: path/page.html
+```html
+<div>${‘path/page.json’ @ extension=’html’}</div>
+<!--/* path/page.html */-->
+```
 - **suffix** - adds, modifies, or removes the suffix part from a URI.
-Example: ${‘path/page.html/some/suffix’ @ suffix=’my/suffix’}
-Output: path/page.html/my/suffix
+```html
+<div>${‘path/page.html/some/suffix’ @ suffix=’my/suffix’}</div>
+<!--/* path/page.html/my/suffix */-->
+```
 - **prependSuffix** - prepends its content to the existing suffix.
-Example: ${'path/page.html/suffix' @ prependSuffix='prepended'}
-Output: <!-- outputs: path/page.html/prepended/suffix -->
+```html
+<div>${'path/page.html/suffix' @ prependSuffix='prepended'}</div>
+<!--/* path/page.html/prepended/suffix */-->
+```
 - **appendSuffix** - appends its content to the existing suffix.
-Example: ${'path/page.html/suffix' @ appendSuffix='appended'}
-Output: <!-- outputs: path/page.html/suffix/appended -->
+```html
+<div>${'path/page.html/suffix' @ appendSuffix='appended'}</div>
+<!--/* path/page.html/suffix/appended */-->
+```
 - **query** - adds, replaces or removes the query segment of a URI, depending on the contents of its map value.
+```html
 <!--
     assuming that jsuse.query evaluates to:
     
@@ -385,27 +423,63 @@ Output: <!-- outputs: path/page.html/suffix/appended -->
       }
     }
 -->
-Example: ${'http://www.example.org/search' @ query=jsuse.query, context='uri'}
-Output: <!-- outputs: http://www.example.org/search?q=htl&array=1&array=2&array=3 -->
+<div>${'http://www.example.org/search' @ query=jsuse.query, context='uri'}</div>
+<!--/* http://www.example.org/search?q=htl&array=1&array=2&array=3 */-->
+```
 - **addQuery** - adds or extends the query segment of a URI with the contents of its map value.
-Example: ${'http://www.example.org/search?s=1' @ addQuery=jsuse.query, context='uri'}
-Output: <!-- outputs: http://www.example.org/search?s=1&q=htl&array=1&array=2&array=3 -->
+```html
+<!--
+    assuming that jsuse.query evaluates to:
+    
+    {
+      "query": {
+        "q" : "htl",
+        "array" : [1, 2, 3]
+      }
+    }
+-->
+<div>${'http://www.example.org/search?s=1' @ addQuery=jsuse.query, context='uri'}</div>
+<!--/* http://www.example.org/search?s=1&q=htl&array=1&array=2&array=3  */-->
+```
 - **removeQuery** - removes the identified parameters from an existing query segment of a URI; its value can be a string or a string array.
-Example: ${'http://www.example.org/search?s=1&q=htl' @ removeQuery='q', context='uri'}
-Output: <!-- outputs: http://www.example.org/search?s=1 -->
+```html
+<!--
+    assuming that jsuse.query evaluates to:
+    
+    {
+      "query": {
+        "q" : "htl",
+        "array" : [1, 2, 3]
+      }
+    }
+-->
+<div>${'http://www.example.org/search?s=1&q=htl' @ removeQuery='q', context='uri'}</div>
+<!--/* http://www.example.org/search?s=1  */-->
+```
 - **fragment** - adds, modifies, or replaces the fragment segment of a URI.
-Example: ${'path/page' @ fragment='fragment'}
-Output: <!-- outputs: path/page#fragment -->
+```html
+<div>${'path/page' @ fragment='fragment'}</div>
+<!--/* path/page#fragment  */-->
+```
 
 ## 2.8.9 Localising
 
 Sightly localise terms provided in dictionaries in an easy and beautiful manner by just adding the context i18n. This option internationalises strings, using the current dictionary. If no translation is found, the original string is used.
+
 ${'Page' @ i18n}
+
 The hint option can be used to provide a comment for translators, specifying the context in which the text is used:
+
 ${'Page' @ i18n, hint='Translation Hint'}
+
 The default source for the language is resource, meaning that the text gets translated to the same language as the content. This can be changed to user, meaning that the language is taken from the browser locale or from the locale of the logged-in user:
+
 ${'Page' @ i18n, source='user'}
+
 Providing an explicit locale overrides the source settings:
+
 ${'Page' @ i18n, locale='en-US'}
+
 To embed variables into a translated string, the format option can be used:
+
 ${'Page {0} of {1}' @ i18n, format=[current, total]}
