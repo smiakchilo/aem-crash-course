@@ -40,8 +40,10 @@ page
 
 Now let's go to the jcr:content node. So, SLING will look for a property called sling:resourceType. This is the property that defines what (or better say where) is the resource for this node. So for the page /content/we-retail/us/en/men  the sling:resourceType is wknd/components/structure/page
 ![img.png](img/we-retail-jcrcontent.png)
+
 SLING will look for the resources first under /apps and then under /libs
 ![img.png](img/we-retail-page.png)
+
 For the resource /apps/wknd/components/structure/page  Sling will look for the best match as below if we don’t have any selectors in our request:
 1. page.html
 2. html.html
@@ -50,17 +52,24 @@ For the resource /apps/wknd/components/structure/page  Sling will look for the b
 
 In our example the best match is sling:resourceSuperType. So we go to /apps/core/wcm/components/page/v2/page.
 ![img.png](img/we-retail-page-super.png)
+
 In /apps/core/wcm/components/page/v2/page the best match for us is page.html.
 ![img.png](img/page-html.png)
+
 We see that our script page.html uses different scripts, to render included scripts Sling first goes to the CHILD component (/apps/wknd/components/structure/page - in our case), checks if the file is there and then looks at PARENT component (/apps/core/wcm/components/page/v2/page - in our case). 
+
 F.e. head.html and footer.html we have under /apps/wknd/components/structure/page (CHILD) and /apps/core/wcm/components/page/v2/page (PARENT), Sling uses files under /apps/wknd/components/structure/page (CHILD) to render the page.
+
 As you know page is just one type of component that involved other components, rendering the rest components under the http://localhost:4502/content/we-retail/us/en/men.html has the same approach that we discussed above.
 
 ## 2.9.1 Matching between resource address in AEM and JCR nodes. Rendering resources from JCR like HTML, JSON, TXT and etc.
 
 AEM content can easily be rendered via Sling Default GET Servlet to render JSON, HTML, XML, and TXT.
+
 A default servlet is selected if no servlet or script for the current resource type can be found.
+
 To render node by required render just need to provide a correct view (extension) (if it is not forbidden by the dispatcher, user permissions, etc). As you need to render the HTML view, use the .html extension with your node to get rendered HTML. So your node path will be /content/path/to/node/jcr:content/node.html
+
 AEM, via Sling, also supports developing and deploying custom sling renderers to take full control of the rendered schema and content.
 Under /system/console/servletresolver can check which servlet is responsible for rendering path.
 
@@ -77,9 +86,20 @@ The SlingPostServlet is actually just a gateway to the actual operations. To sel
 - nop - Explicitly requests to do nothing and just sets the response status
 - checkin - Check in a versionable node
 - checkout - Check out a versionable node
+
 All these operations are always performed on the resource to which the request was issued as returned by SlingHttpServletRequest.getResource(). Some operations require additional parameters to be set to operate completely.
+
 Please note that operations are mutually exclusive. For a single POST request only one operation may be executed. Operations also only consume the request parameters as described below. Any excess parameters are silently ignored.
-The following diagram shows examples of using request parameters we described above and you can use them when dealing with the SlingPostServlet. (will be changed to code in project)
+
+The following examples show using request parameters we described above and you can use them when dealing with the SlingPostServlet.
+
+- Create or update **/mynode**, set **title** and **body**. Set **lastModified** and **lastModifiedBy** automatically.
+```html
+<form action="/mynode" method="post">
+    <input type="text" name="title">
+    <textarea name="body"></textarea>
+</form>
+```
 
 ## 2.9.3 The most important attributes JCR nodes / Sling resources: jcr:primaryType, sling:resourceType, sling:resourceSuperType. Their values.
 
