@@ -22,15 +22,22 @@ http://www.example.com/products/product1.one.two.html/a/b?a=b
 | http:// | www.example.com | products/product1 | one.two | html | a/b | a=b |
 
 To better understand the process of rendering a page with components, let's break down the rendering of the page http://localhost:4502/content/we-retail/us/en/men.html.
+
 Sling takes a unique approach to handle requests in that a request URL is first resolved to a resource, then based on the resource it selects the actual servlet or script to handle the request.
+
 Resources — the central part of Sling, which represents the resource addressed by any request URL. It is the resource that is first resolved when handling a request. Based on the resource, a first servlet or script is then accessed actually to handle the request.
+
 For our URL http://localhost:4502/content/we-retail/us/en/men.html, the longest matching URL before the first "." will be our resource path. In our case it should be /content/we-retail/us/en/men We will now hit this resource in the repository
 ![img.png](img/we-retail.png)
 As you can see this resolves to a cq:Page. So the next thing SLING will look for is a content node (jcr:content). If that is not found, an error will be thrown. A page is only valid a valid resource if has the below structure:
+
+```json lines
 +page
--jcr:primaryType:cq:Page
-+jcr:content
--jcr:primaryType:cq:PageContent
+  -jcr:primaryType:cq:Page
+  +jcr:content
+    -jcr:primaryType:cq:PageContent
+```
+
 Now let's go to the jcr:content node. So, SLING will look for a property called sling:resourceType. This is the property that defines what (or better say where) is the resource for this node. So for the page /content/we-retail/us/en/men  the sling:resourceType is wknd/components/structure/page
 ![img.png](img/we-retail-jcrcontent.png)
 SLING will look for the resources first under /apps and then under /libs
