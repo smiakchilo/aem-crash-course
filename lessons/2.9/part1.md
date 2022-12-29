@@ -32,9 +32,9 @@ For our URL http://localhost:4502/content/we-retail/us/en/men.html, the longest 
 As you can see this resolves to a cq:Page. So the next thing SLING will look for is a content node (jcr:content). If that is not found, an error will be thrown. A page is only valid a valid resource if has the below structure:
 
 ```json
-+page
+page
   -jcr:primaryType:cq:Page
-  +jcr:content
+  jcr:content
     -jcr:primaryType:cq:PageContent
 ```
 
