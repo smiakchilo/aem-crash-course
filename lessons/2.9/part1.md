@@ -100,11 +100,76 @@ The following examples show using request parameters we described above and you 
     <textarea name="body"></textarea>
 </form>
 ```
-
+- Create new node below **/mynode** and make it the **first** child (also valid: **last, before x, after x**)
+```html
+<form action="/mynode" method="post">
+    <input type="text" name="dummy">
+    <input type="hidden" name=":order" value="first">
+</form>
+```
+- Delete **/node**
+```html
+<form action="/node" method="post">
+    <input name=":operation" type="hidden" value="delete">
+</form>
+```
+- Delete **/node/one** and **/node/two**
+```html
+<form action="/node" method="post">
+    <input type="hidden" name=":operation" value="delete">
+    <input type="hidden" name=":applyTo" value="/node/one">
+    <input type="hidden" name=":applyTo" value="/node/two">
+</form>
+```
+- Create new node below **/mynode**, set name or name hint. Set **created** and **createdBy** automatically
+```html
+<form action="/mynode/" method="post">
+    <input type="hidden" name=":name" value="new_node">
+    <input type="hidden" name=":nameHint" value="new node">
+</form>
+```
+- Take default value for customer property, remove the title property
+```html
+<input type="text" name="customer">
+<input type="hidden" value="John Doe" name="customer@DefaultValue">
+<input type="hidden" name="title@Delete">
+```
+- Move **/old/node** to **/new/place**
+```html
+<form action="/old/node" method="post">
+    <input type="hidden" name=":operation" value="move">
+    <input type="hidden" name=":dest" value="/new/place">
+</form>
+```
+- Guess property type from date pattern, set property type explicitly and set node type explicitly
+```html
+<input type="text" name="date1" value="2008-06-13T18:55:00">
+<input type="text" name="date2">
+<input type="hidden" name="date2@TypeHint" value="Date">
+<input type="hidden" name="nt:file" value="./uploaded/jcr:primaryType">
+```
+- Copy **/old/node** to **/new/place** and replace the existing node there
+```html
+<form action="/old/node" method="post">
+    <input type="hidden" name=":operation" value="copy">
+    <input type="hidden" name=":dest" value="/new/place">
+    <input type="hidden" name=":replace" value="true">
+</form>
+```
+- Get value for property title from field **oldtitle**
+```html
+<input type="text" name="oldtitle">
+<input type="hidden" value="oldtitle" name="newtitle@ValueFrom">
+```
+- Copy property title from other node's property
+```html
+<input type="hidden" value="/node/prop" name="title@CopyFrom">
+```
 ## 2.9.3 The most important attributes JCR nodes / Sling resources: jcr:primaryType, sling:resourceType, sling:resourceSuperType. Their values.
 
 Jcr:primaryType is a special property. All nodes have jcr:primaryType property. Depending on the jcr:primaryType of the current node, you will be or will not be able to add specific properties to the current node, or create child notes of specific types. E.g., you cannot create a node of type cq:Page under the parent node of type nt:unstructured. You cannot create nu:unstructured under nt:folder. However you are able to create nt:unstructured under sling:Folder, and so on. This property is protected, it cannot be removed or changed by the application using the API.
 
 sling:resourceType property sets in jcr:content and contains a path, which is used by the Servlet and Script resolver to find the appropriate Servlet or Componentto handle the request for the Resource. Path used can be absolute or relative. This mechanism offers more freedom than one in which the script accesses the data entities (as an SQL statement in a PHP script would do) because a resource can have several renditions. If multiple scripts apply for a given request, the script with the best match is selected.
+
 sling:resourceSuperType: It is used to achieve inheritance. When set, it inherits the specified component to this component, allowing us to override some of the scripts.
 
