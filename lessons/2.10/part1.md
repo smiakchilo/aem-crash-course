@@ -13,14 +13,14 @@ Note: We are using the sample project as the base and assume that you have it al
 #### Creating a page component
 
 1. Go to CRXDE, open _/apps/sample-project/components_. Right-click on the ‘components’ folder, choose “Create” -> “Create Component”
-   ![](.\img\creating-page-component-1.png)
+   ![](./img/creating-page-component-1.png)
 2. Specify the following component properties:  
    Label: simplePageComponent  
    Title: Simple Page Component  
    Group: .hidden  
-   ![](.\img\creating-page-component-2.png)
+   ![](./img/creating-page-component-2.png)
 3. Click “Next”, then “OK”, then save the changes.  
-   ![](.\img\creating-page-component-3.png)
+   ![](./img/creating-page-component-3.png)
 4. Rename `simplePageComponent.jsp` into `simplePageComponent.html` and double-click on the file to open it for editing.
 5. Replace the existing code with the following markup:
 
@@ -33,7 +33,7 @@ Note: We are using the sample project as the base and assume that you have it al
 </html>
 ```
 
-![](D:\projects\aem-crash-course\lessons\2.10\img\creating-page-component-4.png)  
+![](./img/creating-page-component-4.png)  
 Save the changes
 
 Now we will create a page that will be rendered by this page component.
@@ -45,22 +45,22 @@ Now we will create a page that will be rendered by this page component.
 3. Specify the following properties:  
    Name: simple-page  
    Type: cq:Page  
-   ![](.\img\creating-page-1.png)  
+   ![](./img/creating-page-1.png)  
    Save the Changes
 4. Right-click on the ‘simple-page’ node, choose “Create” -> “Create Node”
 5. Specify the following properties:  
    Name: jcr:content  
    Type: cq:PageContent  
-   ![](.\img\creating-page-2.png)  
+   ![](./img/creating-page-2.png)  
    Save the changes
 6. Add the following properties to the `jcr:content` node  
    sling:resourceType - /apps/sample-project/components/simplePageComponent (the path to the page component we have created).  
    jcr:title - Simple Page  
    As you already know, `sling:resourceType` is one of the most important properties of a node - it links the content with the scripts that can render this content  
-   ![](.\img\creating-page-3.png)
+   ![](./img/creating-page-3.png)
    Save the changes
 7. Open http://localhost:4502/content/sample-project/us/en/simple-page.html and you will be able to see that the page uses the markup of the page component  
-   ![](.\img\creating-page-4.png)
+   ![](./img/creating-page-4.png)
 
 Real page components are usually more complex. The page markup includes meta tags, JS and CSS scripts, etc. Page components have one or more editable regions where the authors can add new components. Also, page components usually have an authoring dialog that is used for specifying properties of the whole page. We could create all these elements from scratch, but instead of doing that, let’s save us some time and use native AEM capabilities.
 
