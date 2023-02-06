@@ -103,13 +103,13 @@ Now we see the component on the page, but it looks very static. Most components 
 
 #### Adding dynamic data to the component markup
 
-1. In CRXDE open _/content/sample-project/us/en_ and find the component node
+1. In CRXDE open _/content/sample-project/us/en_ and find the component node  
    ![](img/adding-dynamic-data-1.png)
 2. Add a new property:   
 text: This is a custom component message.  
 Save the changes
    ![](img/adding-dynamic-data-2.png)
-3. Go to _/apps/sample-project/components/myFirstComponent/myFirstComponent.html_, change the markup from “Hello World” to ${properties.text}. Save the changes
+3. Go to _/apps/sample-project/components/myFirstComponent/myFirstComponent.html_, change the markup from “Hello World” to ${properties.text}. Save the changes  
    ![](img/adding-dynamic-data-3.png)
 4. Refresh the page to see what’s changed
    ![](img/adding-dynamic-data-4.png)
