@@ -64,11 +64,12 @@ There can be several .html files in one component, they can even be organized in
 In HTL files, you may sometimes see data-sly-use directives, which look like this:
 
 ```html
+
 <sly data-sly-use.album="com.exadel.aem.core.models.Album"></sly>
 <sly data-sly-use.mapUtil="helpers/map.js"/>
 ```
 
- These “imported” classes and scripts can be viewed as parts of the component, but they can also be used independently, in servlets, services, etc. Some people tend no name these classes/scripts components. But this is not true. A component is exactly the node with `cq:Component` primary type and all the markup files under this node that may or may not use Java classes or scripts.
+These “imported” classes and scripts can be viewed as parts of the component, but they can also be used independently, in servlets, services, etc. Some people tend no name these classes/scripts components. But this is not true. A component is exactly the node with `cq:Component` primary type and all the markup files under this node that may or may not use Java classes or scripts.
 </details>
 
 Under the component node, you may also see such subnodes as `cq:dialog`, `cq:editConfig` or `cq:design_dialog`. Generally speaking, they provide editing capabilities for the component. We will talk about them in detail in the second part of this lesson.
@@ -86,7 +87,7 @@ Let’s create our first component. We will do it in CRXDE, as a training exerci
    ![](img/creating-component-2.png)
 4. Click “Next”, then - “OK”. Save the changes.
    You may wonder, what is the purpose of the component group. It is mainly used in two ways: to group similar components and to allow adding all components of a group inside a container. Component groups are similar to user groups in operating systems and networking.
-   The group name is arbitrary, but there is one commonly used name - `.hidden`. The components from this group are added programmatically or embedded. They are hidden from the authors and cannot be added manually.  
+   The group name is arbitrary, but there is one commonly used name - `.hidden`. The components from this group are added programmatically or embedded. They are hidden from the authors and cannot be added manually.
 5. CRXDE has created a `myFirstComponent.jsp` file, but we want to use HTML markup. Rename `myFirstComponent.jsp` to `myFirstComponent.html`. Mind that the file name should be the same as the name of the component node. In lesson 2.9 you will learn the rules of sling resource resolution and why sometimes files should be named in a certain way.
 6. Our first component’s markup will be very simple - it will just contain “Hello world”. Open the HTML file for editing and change its contents. Don’t forget to save the changes!  
    ![](img/creating-component-3.png)
@@ -106,8 +107,8 @@ Now we see the component on the page, but it looks very static. Most components 
 1. In CRXDE open _/content/sample-project/us/en_ and find the component node  
    ![](img/adding-dynamic-data-1.png)
 2. Add a new property:   
-text: This is a custom component message.  
-Save the changes
+   text: This is a custom component message.  
+   Save the changes
    ![](img/adding-dynamic-data-2.png)
 3. Go to _/apps/sample-project/components/myFirstComponent/myFirstComponent.html_, change the markup from “Hello World” to ${properties.text}. Save the changes  
    ![](img/adding-dynamic-data-3.png)
