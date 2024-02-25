@@ -2,29 +2,29 @@
 
 ## Introduction
 
-As you know, a web server supports either backend rendering of web pages, frontend rendering, or else both. So does AEM. We have already discussed that backend rendering has advantages in highly-loaded multi-device websites. The page markup is created mostly on the server and delivered to a user's device. To implement such, we need to have some invariable markup (the "structure" or else "template"), and also some variable markup and data that will be mixed in the structure upon every request. Such a technique is known as templating. AEM has its very own templating engine that you must learn, it is called Sightly or HTL.
+As you know, a web server supports either backend rendering of web pages, frontend rendering, or else both. So does AEM. We have already discussed that backend rendering has advantages in highly-loaded multi-device websites. The page markup is created mostly on the server and delivered to a user's device. To implement such an approach, we need to have some static markup (the "structure" or else "template"), and also some variable markup and data that will be mixed in the structure upon every request. Such a technique is known as templating. AEM has its very own templating engine that you must learn, it is called Sightly or HTL.
 
 ### What is HTL (Sightly)?
 
-**Hypertext Template Language (HTL)** or **Sightly** is specifically designed for AEM. For today it is the default template system for AEM. It takes the place of JSP (JavaServer Pages) as used in previous versions of AEM.
+**HTML Template Language (HTL)** or **Sightly** is specifically designed for AEM. Today it is the default template system for AEM. It takes the place of JSP (JavaServer Pages) that was used in previous versions of AEM.
 HTL uses an expression language to insert pieces of content into the rendered markup, and HTML5 data attributes to define statements over blocks of markup (like conditions or iterations). As HTL gets compiled into Java Servlets, the expressions and the HTL data attributes are evaluated entirely server-side and none remain visible in the resulting HTML.
 
 ## 2.8.1 Syntax
 
 HTL comprises:
-1. Expression Language. Used to insert pieces of content into the rendered markup. Sightly code is written using dollar sign ```‘$’``` and braces ```‘{}’```.
+1. Expression Language. Used to insert pieces of content into the rendered markup. Sightly code is written using the dollar sign ```‘$’``` and braces ```‘{}’```.
 ```${currentPage.title}``` where currentPage is a global object and title is a property.
-4. Block statements. You can add a special data-attribute that starts with ```“data-sly-”``` and contains an HTL statement is quotes to any HTML element. The content in quotes can be either an HTL expression (```${...}```) or a plain string, usually referring to an URL or a page name. For example, ```<div data-sly-include=”main.html”/>``` is an HTL block expression that is bound to an ordinary HTML tag (```<div>```) and contains the definitive data-sly-... attribute. In this very case, the attribute is data-sly-include. It instructs sightly to insert a portion of markup stored in main.html into the current ```<div>``` tag.
+4. Block statements. You can add a special data attribute that starts with ```“data-sly-”``` and contains an HTL statement in quotes to any HTML element. The content in quotes can be either an HTL expression (```${...}```) or a plain string, usually referring to a URL or a page name. For example, ```<div data-sly-include=”main.html”/>``` is an HTL block expression that is bound to an ordinary HTML tag (```<div>```) and contains a data-sly-... attribute. In this very case, the attribute is data-sly-include. It instructs HTL to insert a portion of markup stored in main.html into the current ```<div>``` tag.
 
 The expression syntax includes literals, variables, operators, and options.
-Literals can be Boolean, Integers (including exponentiation, floating point numbers are not supported), Strings and Arrays.
-Variables, much like in Java or JS,  can represent a primitive value or an object with properties. There are two ways to access object properties, with a dot notation, or with a bracket notation:
+Literals can be Booleans, Integers (including exponentiation, floating point numbers are not supported), Strings and Arrays.
+Variables, much like in Java or JS, can represent a primitive value or an object with properties. There are two ways to access object properties: with a dot notation or with a bracket notation:
 ```html
 ${currentPage.title}
 ${currentPage['title']} or ${currentPage["title"]}
 ```
 
-So called options can be added to every expression.
+So-called options can be added to every expression.
 Everything after the @ is an option:
 ```html
 ${myVar @ optOne}
@@ -33,18 +33,18 @@ ${myVar @ optOne}
 Each option can be used in several ways:
 1. Option can work as a functions argument - it accepts the expression as an argument and processes it.
 2. When the expression is located in a data-sly-* statement, they allow providing instructions or parameters to that statement.
-On a plain expression (that is not located in a data-sly-* statement), the following options are possible: **format** (concatenates strings), **i18n** (translates strings), **join** (Defines the string delimiter to display between items of an array), **context** (Controls how the HTML escaping and XSS protection applies).
-The **<sly>** HTML tag can be used to remove the current element, allowing only its children to be displayed.
+On a plain expression (that is not located in a data-sly-* statement), the following options are possible: **format** (concatenates strings), **i18n** (translates strings), **join** (defines the string delimiter to display between items of an array), **context** (controls how the HTML escaping and XSS protection apply).
+The **`<sly>`** HTML tag can be used to remove the current element, allowing only its children to be displayed.
 
-## 2.8.2 Using Java/JS entity. Display Context
+## 2.8.2 Using Java/JS entities. Display Context
 
-The great power of HTL is its ability to import and use entities from the Java backend, and also from JS. This way, we can declare an instance of a Sling model, or a reference to a Service, retrieve data from it, and insert right into the markup. Also, we can declare a reference to another HTL file and use it within the current HTL file. This all is done with a data-sly-use HTL block statement.
-data-sly-use initializes a helper object (defined in JavaScript or Java) and exposes it through a variable.
-To use a java class/js file we need to write a full name of a java class or path to the js file with name and extension if they are not in the same directory as a HTL file.
+The great power of HTL is its ability to import and use entities from the Java backend, and also from JS. This way, we can declare an instance of a Sling model, or a reference to a Service, retrieve data from it, and insert it right into the markup. Also, we can declare a reference to another HTL file and use it within the current HTL file. This all is done with a `data-sly-use` HTL block statement.
+`data-sly-use` initializes a helper object (defined in JavaScript or Java) and exposes it through a variable.
+To use a java class/js file we need to write the full name of the java class or the path to the js file with the name and extension if they are not in the same directory as the HTL file.
 ```html
 <div data-sly-use.test="org.example.JavaClass">${test.foo}</div>
 ```
-The identifier set by the **data-sly-use** block element is global to the script and can be used anywhere after its declaration (except for the situation when it is declared within data-sly-test). Any method can be called (even one that does not return anything). As long as it is an instance method (not a static one) and has no arguments. Mind that if your method is some getter (starts with "get..." or "is..."), these prefixes should be omitted.
+The identifier set by the `data-sly-use` block element is global to the script and can be used anywhere after its declaration (except for the situation when it is declared within `data-sly-test`). Any method can be called (even one that does not return anything). As long as it is an instance method (not a static one) and has no arguments. Mind that if your method is a getter (starts with "get..." or "is..."), these prefixes can be omitted.
 When you are calling a Java class method from HTL, make sure it takes no arguments. But what if you actually need to pass some data from HTL to Java? Usually, this is done via @-options. If you are using a Sling Model through data-sly-use, these options will be retrievable from it as attributes of the request. Please mind that they will refer to the "whole" Sling model, not a concrete method.
 ```html
 <div data-sly-use.test="${‘org.example.JavaClass’ @ param=’value’}"></div>
@@ -60,7 +60,7 @@ use(function() {
     return text;
 });
 ```
-And to get our object in HTL file, we will use data-sly-use like that:
+And to get our object in the HTL file, we will use data-sly-use like that:
 ```html
 <div data-sly-use.text=”text.js”>
     <h1>Title: ${text.title}</h1>
@@ -69,7 +69,7 @@ And to get our object in HTL file, we will use data-sly-use like that:
 ```
 
 ### Display context
-To protect against cross-site scripting (XSS) vulnerabilities, HTL automatically recognises the context within which an output string is to be displayed within the final HTML output, and escapes that string appropriately. For example, if the expression appears in place that would produce a text node once rendered, then it is said to be in a text context. If it is found within the value of an attribute, then it is said to be in an attribute context, and so forth.
+To protect against cross-site scripting (XSS) vulnerabilities, HTL automatically recognises the context within which an output string is to be displayed within the final HTML output, and escapes that string appropriately. For example, if the expression appears in a place that would produce a text node once rendered, then it is said to be in a text context. If it is found within the value of an attribute, then it is said to be in an attribute context, and so forth.
 Usually, the context is "recognized" by the HTL engine automatically, and you don't need to specify it. But sometimes you need to override the default with the context option:
 ```html
 <div>${properties.richText @ context='html'}</div>
@@ -94,7 +94,7 @@ Available contexts:
 
 ## 2.8.3 HTL Global Objects
 
-Without having to specify anything, HTL provides access to some global objects. Any argumentless methods of objects can be invoked by HTL.
+Without having to specify anything, HTL provides access to a number of global objects. Any argumentless methods of these objects can be invoked by HTL.
 These objects provide convenient access to commonly used information. Their content can be accessed with the dot notation.
 The most useful variables:
 - **properties** - List of properties of the current Resource. Backed by org.apache.sling.api.resource.ValueMap
@@ -107,10 +107,10 @@ The most useful variables:
 
 ## 2.8.4 HTL Block Statements
 
-HTL block statements are custom data attributes added directly to existing HTML.
-Elements with data-sly- attributes can have a closing tag or be self-closing. Attributes can have values (which can be static strings or expressions), or simply be boolean attributes (without a value).
+HTL block statements are custom data attributes added directly to the existing HTML.
+Elements with `data-sly-*` attributes can have a closing tag or be self-closing. Attributes can have values (which can be static strings or expressions), or simply be boolean attributes (without a value).
 Several block statements can be set on the same element.
-All evaluated data-sly-* attributes are removed from the generated markup.
+All evaluated `data-sly-*` attributes are removed from the generated markup.
 A block statement can also be followed by an identifier:
 
 ### Available Block Statements
@@ -124,13 +124,14 @@ There are a number of block statements available. When used on the same element,
 6. data-sly-unwrap
 7. data-sly-list, data-sly-repeat
 8. data-sly-attribute
+
 When two block statements have the same priority, their evaluation order is from left to right.
 
 ### Test
 
 **data-sly-test** conditionally removes the host element and its content. A value of false removes the element, a value of true retains the element.
 ```html
-<p data-sly-test.editOrDesign="${wcmmode.edit || wcmmode.design}">This text will be displayed only if “wcmmode.edit || wcmmode.design will” be evaluated to TRUE</p>
+<p data-sly-test.editOrDesign="${wcmmode.edit || wcmmode.design}">This text will be displayed only if “wcmmode.edit || wcmmode.design” is evaluated to TRUE</p>
 ```
 
 ### Set
@@ -152,9 +153,10 @@ The following default variables are available within the scope of the list:
 - first: true if the current item is the first item.
 - middle: true if the current item is neither the first nor the last item.
 - last: true if the current item is the last item.
-- odd: true if index is odd.
-- even: true if index is even.
-Defining an identifier on the data-sly-list statement allows you to rename the itemList and item variables. item will become variable and itemList will become variable List.
+- odd: true if the index is odd.
+- even: true if the index is even.
+
+Defining an identifier on the data-sly-list statement allows you to rename the itemList and item variables. item will become variable and itemList will become variableList.
 ```html
 <ul data-sly-list.child="${currentPage.listChildren}">
     <li>${child.title}</li>
@@ -170,7 +172,7 @@ You can use data-sly-list to iterate not only collections, but also Maps (and JS
 
 ### Repeat
 
-With data-sly-repeat you can repeat an element multiple times based on the list that is specified.
+With **data-sly-repeat** you can repeat an element multiple times based on the list that is specified.
 This works the same way as data-sly-list, except that you do not need a container element.
 ```html
 <p data-sly-repeat="${resource.listChildren}">${item.text}</p>
@@ -289,14 +291,14 @@ Examples for number -3.14:
 <!--/* -.314E01 */-->
 ```
 
-## 2.8.6 Rendering nested resource
+## 2.8.6 Rendering nested resources
 
-**data-sly-resource** includes the result of rendering the indicated resource. Includes a rendered resource from the same server, using an absolute or relative path.
+**data-sly-resource** includes the result of rendering the indicated resource (form an absolute or a relative path).
 A simple resource include:
 ```html
 <article data-sly-resource="path/to/resource"></article>
 ```
-**data-sly-resource** creates a new internal request via the sling engine
+**data-sly-resource** creates a new internal request via the sling engine.
 The following options can be added to the expression:
 - appendPath - appends its content to the passed path;
 ```html
@@ -331,11 +333,13 @@ The following options can be added to the expression:
 
 ## 2.8.7 Reusing markup fragments
 
-In Sightly, Templates tend to define reusable and potentially recursive methods that can be defined locally or in separate files.
+In HTL, templates define reusable blocks of markup.
 Template blocks can be used like function calls: in their declaration, they can get parameters, which can then be passed when calling them.
-**data-sly-template** defines a template. The host element and its content are not output by HTL.
+
+**data-sly-template** defines a template. The host element and its content are not be rendered by HTL.
 The identifier set by the data-sly-template block element is global and available no matter if it's accessed before or after the template's definition. An identically named identifier created with the help of another block element can override the value of the identifier set by data-sly-template.
-**data-sly-call** calls a template defined with data-sly-template. The content of the called template (optionally parameterized) replaces the content of the host element of the call.
+
+**data-sly-call** calls a template defined with data-sly-template. The content of the called template (optionally parameterized) replaces the content of the host element.
 ```html
 <template data-sly-template.two="${@ title, resource='The resource of the parent node'}"> <!--/* The template element and its content are not output by HTL. */-->
 <h1>${title}</h1>
@@ -464,9 +468,9 @@ The URI manipulation options work for expressions that are outside of block stat
 <!--/* path/page#fragment  */-->
 ```
 
-## 2.8.9 Localising
+## 2.8.9 Localization
 
-Sightly localise terms provided in dictionaries in an easy and beautiful manner by just adding the context i18n. This option internationalises strings, using the current dictionary. If no translation is found, the original string is used.
+You can use I18n dictionaries in HTL in an easy and beautiful manner by just adding the i18n option. This option translates strings using the current language's dictionary. If no translation is found, the original string is used.
 
 ${'Page' @ i18n}
 
