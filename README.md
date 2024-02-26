@@ -1,6 +1,7 @@
 <img src="header.webp" alt="Header logo" width="100%"/>
 
 ### Lessons
+- 2.2 [Developer Methods Of Working With AEM. CRXDE](lessons/2.2/part1.md)
 - 2.5 [AEM Components - Part 1](lessons/2.5/part1.md)
 - 2.7 [Back-end of an AEM Component. Sling Models](lessons/2.7/part1.md)
 - 2.8 [Components View. Markup language HTL (Sightly)](lessons/2.8/part1.md)
