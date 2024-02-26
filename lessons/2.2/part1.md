@@ -1,4 +1,4 @@
-# 2.2. DEVELOPER METHODS OF WORKING WITH AEM
+# 2.2. Developer Methods Of Working With AEM. CRXDE
 
 ## Composition of the AEM project: packages and bundles. Bundle as part of a package.
 
