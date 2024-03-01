@@ -157,7 +157,7 @@ Apart from `Map<String,Object>`, the _activate_ or _modified_ method can consume
 
 * `BundleContext` - context for the bundle that holds the component that is being activated. See spec [here](https://docs.osgi.org/javadoc/r4v43/core/org/osgi/framework/BundleContext.html);
 * `ComponentContext` - context for the current service. Read on it [here](https://developer.adobe.com/experience-manager/reference-materials/6-4/javadoc/org/osgi/service/component/ComponentContext.html);
-* Or an object representing the user config (see more [in the next lesson](../2.12/part1.md)).
+* Or an object representing the user config (see more [in the next lesson](../11/part1.md)).
 
 You can even declare many or parameters at the same time like
 
@@ -462,9 +462,9 @@ Interestingly, a service can be injected directly into the HTL markup:
 Just remember that an HTL script in normal situations can only call zero-argument methods, so your service must provide one.
 
 These were the basics of OSGi application structure. Knowing than bundles are and how we define an OSGi component (or service), it's time to take a thorough look 
- at real-world applications of a service. Let us learn how a service is set up and controlled and what it has to do with the content repository. This is what the [next lesson](../2.12/part1.md) is about.
+ at real-world applications of a service. Let us learn how a service is set up and controlled and what it has to do with the content repository. This is what the [next lesson](../11/part1.md) is about.
 ---
 
 [<< Previous part](part1.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

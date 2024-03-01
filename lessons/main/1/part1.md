@@ -1,4 +1,4 @@
-# 2.1. AEM as a Client-Server Platform
+# 1. AEM as a Client-Server Platform
 
 ## Introduction
 
@@ -152,5 +152,5 @@ That'll be it with the introductory part. More detail will come in due time. Now
 
 [Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
 

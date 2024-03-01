@@ -91,6 +91,6 @@ We will continue by digging deeper into a particular OSGi feature - or rather a 
  
 ---
 
-[<< Previous part](part2.md)
+[Previous part](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

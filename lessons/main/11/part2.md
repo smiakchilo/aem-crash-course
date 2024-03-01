@@ -1,6 +1,6 @@
 ## Working with the content repository with a Service
 
-In the lesson on [Sling models](../2.7/part2.md), we mentioned that data manipulations are sometimes performed from a service, not a user request. An often use-case is retrieving some info and storing it into JCR so that it could be rendered in the site's pages later on. Else, services are responsible for maintenance tasks (updating content, e.g., dates; removing obsolete content, etc.)
+In the lesson on [Sling models](../5/part2.md), we mentioned that data manipulations are sometimes performed from a service, not a user request. An often use-case is retrieving some info and storing it into JCR so that it could be rendered in the site's pages later on. Else, services are responsible for maintenance tasks (updating content, e.g., dates; removing obsolete content, etc.)
 
 In situations like those, a service must impersonate a user. The right to modify or delete content does not come for granted. The service must initiate a data access session and, eventually, close it. 
 
@@ -131,8 +131,8 @@ The main activity is however going inside the `execute()` method. The new _Resou
 
 ---
 
-[Continue reading >>](part3.md)
+[Continue reading](part3.md)
 
-[<< Previous part](part1.md)
+[Previous part](part1.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

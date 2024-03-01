@@ -1,4 +1,4 @@
-# AEM as an application server. OSGi bundles and services
+# 11. AEM as an application server. OSGi bundles and services
 
 ## Working with bundles
 
@@ -276,6 +276,6 @@ curl -u admin:admin -daction=uninstall http://<aem_host>:<aem_port>/system/conso
 ```
 ---
 
-[Continue reading >>](part2.md)
+[Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

@@ -1,4 +1,4 @@
-# 2.9 Rendering Page with Components
+# 7. Rendering Page with Components
 
 ## Introduction
 
@@ -94,3 +94,6 @@ You can read the full documentation for the SlingPostServlet [here](https://slin
 
 `sling:resourceSuperType` is used to achieve inheritance. When set, it inherits the specified component to this component, allowing us to override some of the scripts.
 
+---
+
+[To Contents](../../../README.md)

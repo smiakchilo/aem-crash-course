@@ -223,4 +223,4 @@ You can find a lot more information in the official [HTL Specification](https://
 
 [To previous part](part1.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
