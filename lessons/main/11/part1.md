@@ -1,6 +1,6 @@
-## OSGi services: configuring and use-cases
+## 12. OSGi services: configuring and use-cases
 
-### Services can controlled with OSGi configurations
+### Services can be controlled with OSGi configurations
 
 We have learned that OSGi services support properties that one can specify in development time. Apart from these, OSGi services support user config. 
 
@@ -130,7 +130,7 @@ There's actually more to know about services configurations. Please learn [this 
 
 ---
 
-[Continue reading >>](part2.md)
+[Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
 

@@ -1,4 +1,4 @@
-# 2.7 Back-end of an AEM Component. Sling Models
+# 5. Back-end of an AEM Component. Sling Models
 
 We have just learned what an AEM component is. Let us just remind that it usually consists of these three parts: 
 - The Java code that prepares and manages the data to display. Occasionally, this can be not a Java class but a JavaScript object (so-called JS use-object). But eventually, it also compiles into a Java class;
@@ -599,4 +599,4 @@ You can find a lot more examples in the official [Apache Sling doc on models](ht
 
 [Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

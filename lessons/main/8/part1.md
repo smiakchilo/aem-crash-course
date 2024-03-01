@@ -1,4 +1,4 @@
-## Templates In AEM
+## 8. Templates In AEM
 
 So far you have learned how to create components and authoring interfaces for them. But components are just building blocks that are used for creating full-featured pages. In this lesson, we will learn how pages are built in AEM.
 
@@ -117,7 +117,7 @@ There is almost no difference between these two template variations when you are
 
 ---
 
-[Continue reading >>](part2.md)
+[Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
 

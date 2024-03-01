@@ -1,4 +1,4 @@
-# 2.2. Developer Methods Of Working With AEM. CRXDE
+# 2. Developer Methods Of Working With AEM. CRXDE
 
 ## Composition of the AEM project: packages and bundles. Bundle as part of a package.
 
@@ -113,5 +113,5 @@ If you want to copy content from one instance to another you need to go to the i
 
 [Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
 

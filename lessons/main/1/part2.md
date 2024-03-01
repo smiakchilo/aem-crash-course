@@ -171,4 +171,4 @@ And so, we have managed to install and run AEM, and had a very brief journey thr
 
 [To previous part](part1.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

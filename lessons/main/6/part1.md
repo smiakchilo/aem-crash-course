@@ -1,4 +1,4 @@
-# 2.8 Components View. HTL markup language 
+# 6. Components View. HTL markup language 
 
 ## Introduction
 
@@ -109,4 +109,4 @@ The most useful variables:
 
 [Continue reading](part2.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

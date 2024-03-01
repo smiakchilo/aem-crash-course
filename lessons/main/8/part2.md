@@ -152,4 +152,4 @@ One final note on template management. Editable templates were created to enable
 
 [To previous part](part1.md)
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)

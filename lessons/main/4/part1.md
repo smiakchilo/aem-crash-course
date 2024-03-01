@@ -1,4 +1,4 @@
-# AEM Components - Part 1
+# 4. AEM Components
 
 ## AEM Components - building blocks for a website
 
@@ -52,7 +52,7 @@ This .html file is responsible for rendering the content. Let’s open the file 
 
 ![](img/component-html-in-crxde.png)
 
-If the component consisted only of HTML markup, it would render the same content on each page. But most components are dynamic and render different data depending on the underlying content node, HTTP request parameters, etc. The dynamic part of the component is provided by the HTL scripting language. The idea will look familiar to you if you have ever worked with PHP or Node.js template engines. If not, we have a separate lesson dedicated to HTL [here](../2.8/part1.md).
+If the component consisted only of HTML markup, it would render the same content on each page. But most components are dynamic and render different data depending on the underlying content node, HTTP request parameters, etc. The dynamic part of the component is provided by the HTL scripting language. The idea will look familiar to you if you have ever worked with PHP or Node.js template engines. If not, we have a separate lesson dedicated to HTL [here](../6/part1.md).
 
 In short, HTL is responsible for adding content data into HTML, conditional rendering or rendering markup in a loop (e.g. when you have a collection of Strings and want to display all of them in a list).
 
@@ -151,4 +151,4 @@ Useful Links:
 
 ---
 
-[To Contents](../../README.md)
+[To Contents](../../../README.md)
