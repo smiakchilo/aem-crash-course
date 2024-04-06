@@ -1,4 +1,4 @@
-# 11. AEM as an application server. OSGi bundles and services
+# 10. AEM as an application server. OSGi bundles and services
 
 ## Working with bundles
 
