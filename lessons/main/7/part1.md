@@ -46,27 +46,31 @@ page
     -jcr:primaryType:cq:PageContent
 ```
 
-Now let's go to the jcr:content node. Sling will look for a property called sling:resourceType. This is the property that defines what (or better say where) is the renderer for this node. So for the page /content/we-retail/us/en/men  the sling:resourceType is wknd/components/structure/page
+Now let's go to the jcr:content node. Sling will look for a property called sling:resourceType. This is the property that defines what (or better say where) is the renderer for this node. So for the page /content/we-retail/us/en/men  the sling:resourceType is weretail/components/structure/page
+
 ![img.png](img/we-retail-jcrcontent.png)
 
 Sling will look for the resources first under /apps and then under /libs
+
 ![img.png](img/we-retail-page.png)
 
-For the resource /apps/wknd/components/structure/page Sling will look for the best match as below if we don’t have any selectors in our request:
+For the resource /apps/weretail/components/structure/page Sling will look for the best match as below if we don’t have any selectors in our request:
 1. page.html
 2. html.html
 3. If none of the files mentioned above are present in your component, and it has a sling:resourceSuperType, then Sling will go and take a look at that component in a similar manner to find if any script can be resolved to render content.
 4. GET.html
 
 In our example, the best match is sling:resourceSuperType. So we go to /apps/core/wcm/components/page/v2/page.
+
 ![img.png](img/we-retail-page-super.png)
 
 In /apps/core/wcm/components/page/v2/page the best match for us is page.html.
+
 ![img.png](img/page-html.png)
 
-We see that our script page.html uses different scripts, to render included scripts Sling first goes to the CHILD component (/apps/wknd/components/structure/page - in our case), checks if the file is there and then looks at PARENT component (/apps/core/wcm/components/page/v2/page - in our case). 
+We see that our script page.html uses different scripts, to render included scripts Sling first goes to the CHILD component (/apps/weretao;/components/structure/page - in our case), checks if the file is there and then looks at PARENT component (/apps/core/wcm/components/page/v2/page - in our case). 
 
-For example, we have head.html and footer.html under /apps/wknd/components/structure/page (CHILD) and /apps/core/wcm/components/page/v2/page (PARENT), Sling uses files under /apps/wknd/components/structure/page (CHILD) to render the page.
+For example, we have head.html and footer.html under /apps/weretail/components/structure/page (CHILD) and /apps/core/wcm/components/page/v2/page (PARENT), Sling uses files under /apps/weretail/components/structure/page (CHILD) to render the page.
 
 As you know, page is just one type of component that involved other components, rendering the rest components under the http://localhost:4502/content/we-retail/us/en/men.html has the same approach that we discussed above.
 
