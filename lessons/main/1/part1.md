@@ -135,7 +135,7 @@ With describing all of this, we haven't actually spoken about what a front-end p
 
 First, a UI guy contributes in creating HTML/Sightly/HTL templates.
 
-Second, it cooperates in creating the authoring dialogs for the components.
+Second, they cooperate in creating the authoring dialogs for the components.
 
 And third, they are definitely responsible for how the site will look like in browsers. There is usually a wider range of options, and the whole of the contemporary front-end stack is available.
 
