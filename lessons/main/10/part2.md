@@ -354,7 +354,7 @@ Injecting a collection of services has an interesting nuance. Implementations of
 
 Depends on the two properties you can specify for the `@Reference` annotation: `referencePolicy` and `referencePolicyOption`.
 
-Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (the bundle in belongs to is unloaded).
+Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (the bundle it belongs to is unloaded).
 
 Above all, setting `referencePolicy` to _DYNAMIC_ allows event-driven reference management: it honors the _bind_ and _unbind_ methods. See the next chapter for detail.
 </details> 
