@@ -123,7 +123,7 @@ First, we declare a static argument map which is needed to initialize the _Resou
 
 The main activity is however going inside the `execute()` method. The new _ResourceResolver_ is created from the `resourceResolverFactory` service with the above map. The _ResourceResolver_ is then used to retrieve a common content root. Afterward, it creates a new child resource. The three arguments passed to the `create()` method are the parent resource, the name of the child, and the properties that will form the value map of the child. Finally, the _ResourceResolver_ commits the changes. Otherwise, they will not be actually stored.
 
-> Please learn the sample projects' [AlbumSaverImpl](/project/core/src/main/java/com/exadel/aem/core/services/impl/AlbumSaverImpl.java). In this service, we create several pages with `PageManager` (which words much like `ResourceResolver`), and also create and modify resources. Each set op operations over a single resource tree ends with `commit()`.
+> Please learn the sample projects' [AlbumSaverImpl](/project/core/src/main/java/com/exadel/aem/core/services/impl/AlbumSaverImpl.java). In this service, we create several pages with `PageManager` (which words much like `ResourceResolver`), and also create and modify resources. Each set of operations over a single resource tree ends with `commit()`.
 
 <u>Very important</u>: a _ResourceResolver_ created in code must be manually closed. Not closing a _ResourceResolver_ is a frequent reason for a memory leak. That's why they recommend to introduce _ResourceResolver_ with _try-with-resources_ as in the sample above.
 
