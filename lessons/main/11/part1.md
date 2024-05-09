@@ -1,4 +1,4 @@
-## 12. OSGi services: configuring and use-cases
+## 11. OSGi services: configuring and use-cases
 
 ### Services can be controlled with OSGi configurations
 

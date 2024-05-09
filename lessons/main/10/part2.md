@@ -354,7 +354,7 @@ Injecting a collection of services has an interesting nuance. Implementations of
 
 Depends on the two properties you can specify for the `@Reference` annotation: `referencePolicy` and `referencePolicyOption`.
 
-Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (the bundle in belongs to is unloaded).
+Default `referencePolicy` is _STATIC_ while default `referencePolicyOption` is _RELUCTANT_. It means a new implementation that became available won't be automatically bound. But if the values are respectively _DYNAMIC_ and _GREEDY_, the list of references will be modified as soon as a new implementation becomes available. Also, if the policy is _DYNAMIC_, the list will be revised as an implementation is gone (the bundle it belongs to is unloaded).
 
 Above all, setting `referencePolicy` to _DYNAMIC_ allows event-driven reference management: it honors the _bind_ and _unbind_ methods. See the next chapter for detail.
 </details> 
@@ -463,6 +463,7 @@ Just remember that an HTL script in normal situations can only call zero-argumen
 
 These were the basics of OSGi application structure. Knowing than bundles are and how we define an OSGi component (or service), it's time to take a thorough look 
  at real-world applications of a service. Let us learn how a service is set up and controlled and what it has to do with the content repository. This is what the [next lesson](../11/part1.md) is about.
+ 
 ---
 
 [<< Previous part](part1.md)

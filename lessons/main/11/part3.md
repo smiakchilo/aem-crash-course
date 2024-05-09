@@ -83,7 +83,7 @@ The logic of this service can be triggered in two ways. We can run it "manually"
 
 Upon activation or modification, this service parses the config to see whether the scheduler is enabled. If yes, the new `ScheduleOptions` object is created. The `SCHEDULER_ID` value is needed to make sure that the same task is not submitted twice: if you try to schedule it again, the previous one is discarded.
 
-> You can find a similar scheduler responsible for periodic downloading of new music albums in our sample project [here](../../project/core/src/main/java/com/exadel/aem/core/services/impl/NewAlbumsRetrievalScheduler.java).
+> You can find a similar scheduler responsible for periodic downloading of new music albums in our sample project [here](../../../project/core/src/main/java/com/exadel/aem/core/services/impl/NewAlbumsRetrievalScheduler.java).
 
 This is it for the current lesson. OSGi bundles and services are quite a complex technology, but no less they are powerful. It is the OSGi that makes an AEM instance as flexible and scalable as any other web server platform out there. 
 

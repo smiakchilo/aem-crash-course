@@ -312,7 +312,7 @@ You may wonder why self-injection can be needed at all. There are indeed a numbe
 
 <details>
 <summary><em style="color:#aaa; font-weight: bold">Injecting secondary Sling models with @ChildResource or @Self (click to expand)</em></summary>
-Another thing to be mentioned is that both `@ChildResource` and `@Self` can be used to inject other Sling models. This is a very useful feature to avoid huge multi-data models and keep them logically simple and atomic. Imagine that you have in JCR resources that contain some text, image, and also several links. Each link, in its onw turn, has an _URL_, a title, and a flag telling whether to open in a separate window.
+Another thing to be mentioned is that both `@ChildResource` and `@Self` can be used to inject other Sling models. This is a very useful feature to avoid huge multi-data models and keep them logically simple and atomic. Imagine that you have in JCR resources that contain some text, image, and also several links. Each link, in its own turn, has an _URL_, a title, and a flag telling whether to open in a separate window.
 
 A "naive" approach would be to design a model like this:
 ```java

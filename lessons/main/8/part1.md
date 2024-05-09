@@ -13,13 +13,16 @@ Note: We are using the sample project as the base and assume that you have it al
 #### Creating a page component
 
 1. Go to CRXDE, open _/apps/sample-project/components_. Right-click on the ‘components’ folder, choose “Create” -> “Create Component”
+   
    ![](./img/creating-page-component-1.png)
 2. Specify the following component properties:  
    Label: simplePageComponent  
    Title: Simple Page Component  
-   Group: .hidden  
+   Group: .hidden
+
    ![](./img/creating-page-component-2.png)
-3. Click “Next”, then “OK”, then save the changes.  
+3. Click “Next”, then “OK”, then save the changes.
+ 
    ![](./img/creating-page-component-3.png)
 4. Rename `simplePageComponent.jsp` into `simplePageComponent.html` and double-click on the file to open it for editing.
 5. Replace the existing code with the following markup:
@@ -33,7 +36,8 @@ Note: We are using the sample project as the base and assume that you have it al
 </html>
 ```
 
-![](./img/creating-page-component-4.png)  
+![](./img/creating-page-component-4.png)
+
 Save the changes
 
 Now we will create a page that will be rendered by this page component.
@@ -44,22 +48,29 @@ Now we will create a page that will be rendered by this page component.
 2. Right-click on the ‘en’ node, choose “Create” -> “Create Node”
 3. Specify the following properties:  
    Name: simple-page  
-   Type: cq:Page  
+   Type: cq:Page
+   
    ![](./img/creating-page-1.png)  
+
    Save the Changes
 4. Right-click on the ‘simple-page’ node, choose “Create” -> “Create Node”
 5. Specify the following properties:  
    Name: jcr:content  
    Type: cq:PageContent  
+
    ![](./img/creating-page-2.png)  
+
    Save the changes
 6. Add the following properties to the `jcr:content` node  
    sling:resourceType - /apps/sample-project/components/simplePageComponent (the path to the page component we have created).  
    jcr:title - Simple Page  
    As you already know, `sling:resourceType` is one of the most important properties of a node - it links the content with the scripts that can render this content  
+
    ![](./img/creating-page-3.png)
+
    Save the changes
 7. Open http://localhost:4502/content/sample-project/us/en/simple-page.html and you will be able to see that the page uses the markup of the page component  
+
    ![](./img/creating-page-4.png)
 
 Real page components are usually more complex. The page markup includes meta tags, JS and CSS scripts, etc. Page components have one or more editable regions where the authors can add new components. Also, page components usually have an authoring dialog that is used for specifying properties of the whole page. We could create all these elements from scratch, but instead of doing that, let’s save us some time and use native AEM capabilities.
@@ -71,14 +82,20 @@ AEM offers an override mechanism that allows us to “inherit” one component f
 1. Go to CRXDE, open the page component _/apps/sample-project/components/simplePageComponent_ that we have previously created.
 2. Add a new property to the component node  
    sling:resourceSuperType - /apps/core/wcm/components/page/v3/page  
+
    ![](./img/extending-page-component-1.png)  
+
    Save the changes.  
    `sling:resourceSuperType` is the analogue of the “extends” keyword in Java - it allows us to extend one component from another. Let’s examine the page component we are planning to extend and decide, which parts we want to override
 3. Open _/apps/core/wcm/components/page/v3/page_ and examine the list of files it includes.  
+
    ![](./img/extending-page-component-2.png)  
+
    First of all, we have a README.md file which contains the detailed documentation of the component. Secondly, we have a `cq:dialog` node that allows authors to specify page properties. You already know about component dialogs from lessons 2.5 and 2.6, these dialogs are almost identical. Thirdly, we have `page.html` script. Since the node is named ‘page’, `page.html` script is the entry point from which AEM starts rendering the component.
 4. Examine `page.html` script  
+
    ![](./img/extending-page-component-3.png)  
+
    We see that this script serves the same purpose as our `simplePageComponent.html` - it defines the page “skeleton”.This script includes other scripts - `head.html`, `body.html`, `footer.html`. This gives us more flexibility - we can override what we want to customize while inheriting other parts of the patent page component.  
    For now, we will override only the `body.html` part of the page - we want our page to have one layout container.
 5. Return to _/apps/sample-project/components/simplePageComponent_. Delete `simplePageComponent.html` and add `body.html`   
@@ -90,15 +107,22 @@ AEM offers an override mechanism that allows us to “inherit” one component f
    ```
 
    ![](./img/extending-page-component-4.png)  
+
    Save the changes.
 
-6. Now let’s open the page we created earlier and see, how these changes are reflected in the page itself. http://localhost:4502/editor.html/content/sample-project/us/en/simple-page.html  
-   ![](./img/extending-page-component-5.png)    
+6. Now let’s open the page we created earlier and see, how these changes are reflected in the page itself. http://localhost:4502/editor.html/content/sample-project/us/en/simple-page.html
+  
+   ![](./img/extending-page-component-5.png)
+
    As we can see, instead of static “Hello world” markup, we now have an editable region of the page, where we will soon be able to add new components. Also, we are now able to define page properties.
 7. Click on the equalizer icon and open the page properties dialog  
-   ![](./img/extending-page-component-6.png)  
+
+   ![](./img/extending-page-component-6.png)
+
    Here we can see the Page properties dialog, which allows us to define meta information, page permissions and other page metadata.
-   ![](./img/extending-page-component-7.png)  
+
+   ![](./img/extending-page-component-7.png)
+
    This page properties dialog is inherited from the parent component, but we could also customize it on simplePageComponent level. Customizing page properties is out of this lesson’s scope, but you can read more about it [here](https://experienceleague.adobe.com/docs/experience-manager-learn/sites/developing/page-properties-technical-video-develop.html?lang=en).
 
 ### Templates: an introduction
